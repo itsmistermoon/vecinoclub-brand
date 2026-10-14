@@ -6,7 +6,7 @@ Este repositorio define la identidad de VecinoClub como marca. No define el sist
 
 ## Color
 
-`tokens/vecinoclub.css` es la fuente ejecutable de los colores. La paleta cálida es optativa para superficies de marca como la landing o el acceso de la plataforma. La interfaz operativa usa la base neutral; no mezclar la paleta cálida con acentos de tenant en una misma superficie. El acento naranja `#fb772a` es común a los temas claro y oscuro.
+`tokens/vecinoclub.css` es la fuente ejecutable de los colores. La paleta cálida es optativa para superficies de marca como la landing o el acceso de la plataforma. La interfaz operativa usa la base neutral; no mezclar la paleta cálida con acentos de tenant en una misma superficie. El acento naranja `#fb772a` es común a los temas claro y oscuro. El dorado y el naranja de interacción también se definen aquí.
 
 Los valores `--vc-success`, `--vc-warning` y `--vc-danger` documentan el aspecto de superficies de marca. Los estados semánticos de la interfaz operativa pertenecen a su sistema de diseño.
 

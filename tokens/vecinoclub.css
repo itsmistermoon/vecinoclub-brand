@@ -10,6 +10,8 @@
   --vc-input: #fcf4df;
   --vc-input-border: #f3e6cf;
   --vc-primary: #fb772a;
+  --vc-primary-hover: #ff8b47;
+  --vc-gold: #fcbf29;
   --vc-primary-foreground: #171717;
   --vc-secondary: #ece4d1;
   --vc-secondary-foreground: #171717;
@@ -33,6 +35,8 @@
   --vc-input: #211e1a;
   --vc-input-border: #171717;
   --vc-primary: #fb772a;
+  --vc-primary-hover: #ff8b47;
+  --vc-gold: #fcbf29;
   --vc-primary-foreground: #171717;
   --vc-secondary: #332f2a;
   --vc-secondary-foreground: #fcf4df;
