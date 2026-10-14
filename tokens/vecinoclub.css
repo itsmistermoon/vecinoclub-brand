@@ -1,0 +1,43 @@
+/* VecinoClub brand palette. Source: vecinoclub-brand. Do not edit consumer copies. */
+:root {
+  /* ---------- VecinoClub brand palette — opt-in ---------- */
+  --vc-background: #f3e6cf;
+  --vc-card: #fcf4df;
+  --vc-surface-raised: #fcf4df;
+  --vc-foreground: #171717;
+  --vc-muted-foreground: #59554e;
+  --vc-border: #c6b29d;
+  --vc-input: #fcf4df;
+  --vc-input-border: #f3e6cf;
+  --vc-primary: #fb772a;
+  --vc-primary-foreground: #171717;
+  --vc-secondary: #ece4d1;
+  --vc-secondary-foreground: #171717;
+  --vc-placeholder: #d6c6b1;
+  --vc-success: #2e7d32;
+  --vc-danger: #b3261e;
+  --vc-warning: #8a5a00;
+  --vc-radius: 28px;
+  --vc-gutter: clamp(22px, 5vw, 64px);
+  --vc-ease: cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+[data-theme="dark"] {
+  /* ---------- VecinoClub brand palette — opt-in ---------- */
+  --vc-background: #171717;
+  --vc-card: #211e1a;
+  --vc-surface-raised: #27231e;
+  --vc-foreground: #fcf4df;
+  --vc-muted-foreground: #c6b29d;
+  --vc-border: #3a332c;
+  --vc-input: #211e1a;
+  --vc-input-border: #171717;
+  --vc-primary: #fb772a;
+  --vc-primary-foreground: #171717;
+  --vc-secondary: #332f2a;
+  --vc-secondary-foreground: #fcf4df;
+  --vc-placeholder: #3a332c;
+  --vc-success: #66bb6a;
+  --vc-danger: #f2766b;
+  --vc-warning: #e0a33a;
+}
