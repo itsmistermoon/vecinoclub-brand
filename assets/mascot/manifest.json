@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "canonical_character": "views/view-front.png",
+  "files": [
+    {
+      "file": "_sheets/comercio-contexto-generado.png",
+      "type": "original-sheet",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "427e7885cbadad96bd616c24f9709e4b05b09bb72967cd12c288da7ece3bb3a9"
+    },
+    {
+      "file": "_sheets/punto-expresiones.png",
+      "type": "original-sheet",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "73cf5ceefe17b77271201debc4dea18411f20a9444bc23dc6aedbfae070bb732"
+    },
+    {
+      "file": "_sheets/punto-panaderia.png",
+      "type": "original-sheet",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "d8d4646c4d8622cdddb3cba33a010fa127137313f52df9868392e4741fb29e3a"
+    },
+    {
+      "file": "_sheets/punto-poses.png",
+      "type": "original-sheet",
+      "dimensions": {
+        "width": 1774,
+        "height": 887
+      },
+      "sha256": "0114b24227cc62ae8eb5a0c0680748b27c0faea6d14409052759a06c65ae1a21"
+    },
+    {
+      "file": "_sheets/punto-vistas.png",
+      "type": "original-sheet",
+      "dimensions": {
+        "width": 1774,
+        "height": 887
+      },
+      "sha256": "61e86dd653ccd53556800aab4b6869290ded6c393c36c0e12b3b0297645ba2e4"
+    },
+    {
+      "file": "expressions/expression-come-back.png",
+      "type": "expression",
+      "dimensions": {
+        "width": 438,
+        "height": 396
+      },
+      "sha256": "3ec3a4a33ad9e62f75d75591b17d90ff1050e341828a46010072548fbe2cefe9"
+    },
+    {
+      "file": "expressions/expression-points-added.png",
+      "type": "expression",
+      "dimensions": {
+        "width": 438,
+        "height": 396
+      },
+      "sha256": "34a3672f8ac2a2653a8cd90705dccdebb7be1a3027df4d429750c732b7325c28"
+    },
+    {
+      "file": "expressions/expression-qr-scanned.png",
+      "type": "expression",
+      "dimensions": {
+        "width": 438,
+        "height": 396
+      },
+      "sha256": "df39b17b77d7d347bd7f082a5d64f28dd271d0980d248d6a19a92e599f3cf093"
+    },
+    {
+      "file": "expressions/expression-reward-ready.png",
+      "type": "expression",
+      "dimensions": {
+        "width": 438,
+        "height": 396
+      },
+      "sha256": "31fbe0d2a9076bb1b1712c71956a72208c7d62af76d7642d22656fa922b9b029"
+    },
+    {
+      "file": "expressions/expression-reward-redeemed.png",
+      "type": "expression",
+      "dimensions": {
+        "width": 438,
+        "height": 396
+      },
+      "sha256": "6b40c58ec2c91b0326f0314b3532dd991feaf70c3890fad0dee61651605f093c"
+    },
+    {
+      "file": "expressions/expression-stamp-earned.png",
+      "type": "expression",
+      "dimensions": {
+        "width": 438,
+        "height": 396
+      },
+      "sha256": "bd9c210e7b028f8b118ddf301c9b5bd91753f6e1c4251f5e267ebc02a6db0a37"
+    },
+    {
+      "file": "expressions/expression-two-to-go.png",
+      "type": "expression",
+      "dimensions": {
+        "width": 438,
+        "height": 396
+      },
+      "sha256": "19201281b73b313c99e9c687c27d3b17c332c942cffc4d9df48100277c431c9b"
+    },
+    {
+      "file": "expressions/expression-welcome.png",
+      "type": "expression",
+      "dimensions": {
+        "width": 438,
+        "height": 396
+      },
+      "sha256": "91adf21390c3192c8862c4b0503808e4074d344e3438d22eca16f95899717f48"
+    },
+    {
+      "file": "poses/pose-celebrate.png",
+      "type": "pose",
+      "dimensions": {
+        "width": 702,
+        "height": 839
+      },
+      "sha256": "2da51dc209a2bd1f98aed8927f1b3f3d6fe047c79effe89a3b945e93ff18e4ab"
+    },
+    {
+      "file": "poses/pose-open-arms.png",
+      "type": "pose",
+      "dimensions": {
+        "width": 702,
+        "height": 839
+      },
+      "sha256": "84ee9d70c59cda3262a3d6ecdd3379f5adb37e0bdcf08b847eb2598a215ca4d6"
+    },
+    {
+      "file": "poses/pose-wave.png",
+      "type": "pose",
+      "dimensions": {
+        "width": 702,
+        "height": 839
+      },
+      "sha256": "7bd49fd636d826ef76c41799171751b877e3d0731f4e281f3f77ad7875f1066e"
+    },
+    {
+      "file": "usage/usage-bakery-counter.png",
+      "type": "usage",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "d8d4646c4d8622cdddb3cba33a010fa127137313f52df9868392e4741fb29e3a"
+    },
+    {
+      "file": "usage/usage-local-commerce-background.png",
+      "type": "usage",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "427e7885cbadad96bd616c24f9709e4b05b09bb72967cd12c288da7ece3bb3a9"
+    },
+    {
+      "file": "views/view-front.png",
+      "type": "view",
+      "dimensions": {
+        "width": 669,
+        "height": 885
+      },
+      "sha256": "5bcbc36ebd43328c46861b87e17731a66b8eeaf5e72a1507964965c8645f4673"
+    },
+    {
+      "file": "views/view-profile.png",
+      "type": "view",
+      "dimensions": {
+        "width": 669,
+        "height": 885
+      },
+      "sha256": "18b772f730b9e547011408917480db7e05e3e9a3fe9c3996ce47969043e76d76"
+    },
+    {
+      "file": "views/view-three-quarter.png",
+      "type": "view",
+      "dimensions": {
+        "width": 669,
+        "height": 885
+      },
+      "sha256": "db37806cf961afbb888810c8b547458af376112fc2c88f71d05b3c2b1a8bd8de"
+    }
+  ]
+}
