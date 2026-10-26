@@ -12,7 +12,7 @@ Los colores iniciales proceden de `tokens/vecinoclub.css`; el cuerpo naranja y s
 
 Se incluyen ambos botones: usan las API nativas Blob, URL y XMLSerializer, con poco código y sin librerías.
 
-- **Guardar JSON / Abrir JSON:** conserva las decisiones de diseño para volver a editarlas. El esquema actual es versión 1; se rechazan versiones distintas, claves desconocidas, colores inválidos y números fuera de los rangos del inspector, conservando la escena vigente. No se guarda selección ni fase temporal del idle.
+- **Guardar JSON:** conserva las decisiones de diseño como referencia. No se guarda selección ni fase temporal del idle.
 - **Exportar SVG:** descarga la escena con estilos, animación, preferencia de movimiento reducido, estado de pausa y configuración en `<metadata>`. No incluye scripts ni recursos externos. Puede abrirse solo o usarse como imagen. Los controles y el panel quedan fuera del SVG.
 
 ## Fuentes evaluadas y licencias
@@ -38,8 +38,6 @@ El smoke test ejecuta controles públicos del DOM y las descargas reales, sin ac
 chrome-devtools-axi run < /ruta/al/repo/tools/tests/escena-isometrica.browser.js
 ```
 
-Comprueba selección por lista, dibujo y teclado; colores aplicables; extremos de todos los deslizadores; desplazamientos efectivos; visibilidad; controles globales; pausa; continuidad del bucle; exportación XML, carga autónoma como imagen y metadata; importación JSON válida e inválida. La ejecución exige movimiento normal para medir el idle. La comprobación de movimiento reducido se hace por separado con emulación real del navegador y verifica `matchMedia(...).matches === true` y `getComputedStyle(document.querySelector('.idle')).animationName === 'none'`.
+Comprueba selección por lista, dibujo y teclado; ausencia de controles de importación y presets; colores; extremos de los deslizadores; desplazamientos; visibilidad; controles globales; pausa; continuidad del bucle; exportación JSON y SVG, carga autónoma como imagen, metadata y el nombre de animación calculado en el SVG autónomo según la preferencia de movimiento reducida del navegador.
 
 La revisión visual y la verificación independiente de no-mistakes son pasos separados: un smoke test automatizado no certifica por sí solo la fidelidad de la ilustración.
-
-Resultado local (Chrome, 26-10-2026): 225 aserciones satisfactorias, cero errores de consola; carga con contexto offline; SVG descargado y abierto como documento independiente; movimiento reducido confirmado en editor y SVG; móvil de 390 px sin desbordamiento horizontal. Se compararon las referencias proporcionadas con las capturas `default.png`, `extreme-ink.png`, `extreme-bold.png` y `extreme-quiet.png`. Los presets extremos prueban respectivamente línea de 0,2 px e idle de 1 s; línea de 4 px, Punto a 160 % y flotación de 30 px; escala de 40 %, opacidad de 30 %, zoom mínimo y detalles desactivados. Su legibilidad disminuye deliberadamente en los extremos mínimos; la configuración inicial mantiene la lectura de comercio y marcador. Las capturas y `verification.json` se conservan en el expediente externo de esta tarea, no como activos de la landing. La revisión independiente de no-mistakes queda pendiente del handoff.

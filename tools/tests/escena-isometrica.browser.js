@@ -11,6 +11,7 @@ console.log(JSON.stringify(await page.eval(async () => {
     return el;
   };
   const reset = () => $('#reset').click();
+  assert(!$('#import') && !$('#file') && !$('#preset'), 'editor: no import or preset controls');
   reset();
   for (const layer of document.querySelectorAll('[data-layer]')) {
     layer.click();
@@ -97,27 +98,20 @@ console.log(JSON.stringify(await page.eval(async () => {
   assert(!doc.querySelector('parsererror'), 'SVG export: valid XML');
   assert(doc.documentElement.localName === 'svg' && doc.querySelectorAll('[data-object]').length === 5, 'SVG export: all scene elements');
   assert(!doc.querySelector('script,image,use,link'), 'SVG export: no script or external assets');
-  assert(doc.querySelector('style').textContent.includes('prefers-reduced-motion'), 'SVG export: reduced motion rule');
   assert(JSON.parse(doc.querySelector('metadata').textContent).version === config.version, 'SVG export: config metadata');
   const image = new Image();
   image.src = originalURL.call(URL, blobs[1]);
   await image.decode();
   assert(image.naturalWidth === 1000 && image.naturalHeight === 760, 'SVG export: standalone image decoded');
   URL.revokeObjectURL(image.src);
-  const upload = async content => {
-    const dt = new DataTransfer(); dt.items.add(new File([content], 'config.json', {type:'application/json'}));
-    $('#file').files = dt.files; $('#file').dispatchEvent(new Event('change',{bubbles:true}));
-    await new Promise(resolve => setTimeout(resolve, 50));
-  };
-  config.objects.punto.scale = 1.4;
-  await upload(JSON.stringify(config));
-  assert($('#status').textContent === 'Configuración cargada.', 'JSON import: valid document');
-  assert(Math.abs($('[data-object="punto"]').transform.baseVal.consolidate().matrix.a - 1.4) < 0.001, 'JSON import: restores geometry');
-  for (const invalid of ['{', JSON.stringify({...config,version:2}), JSON.stringify({...config,objects:{}}), JSON.stringify({...config,global:{...config.global,speed:0}}), JSON.stringify({...config,global:{...config.global,background:'url(https://example.com)'}})]) {
-    await upload(invalid);
-    assert($('#status').textContent.startsWith('No se pudo abrir'), 'JSON import: rejects invalid document');
-    assert(Math.abs($('[data-object="punto"]').transform.baseVal.consolidate().matrix.a - 1.4) < 0.001, 'JSON import: preserves current scene on failure');
-  }
+  const standalone = document.createElement('iframe');
+  standalone.srcdoc = exported.replace(/^<\?xml[^>]*>\s*/, '');
+  document.body.append(standalone);
+  await new Promise((resolve, reject) => { standalone.onload = resolve; standalone.onerror = reject; });
+  const standaloneWindow = standalone.contentWindow;
+  const idleName = standaloneWindow.getComputedStyle(standalone.contentDocument.querySelector('.idle')).animationName;
+  assert(idleName === (standaloneWindow.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'none' : 'float'), 'SVG export: idle follows reduced-motion preference');
+  standalone.remove();
   reset();
   return {passed:checks.length, checks, reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches};
 })));
