@@ -6,3 +6,4 @@ tools/*
 !tools/tests/
 tools/tests/*
 !tools/tests/escena-isometrica.browser.js
+!tools/tests/escena-isometrica.reduced-motion.mjs
