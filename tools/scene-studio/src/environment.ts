@@ -1,6 +1,6 @@
 import { P, TOP, FRONT, SIDE, box, inPlane } from "./projection";
-import type { Kind } from "./model";
-const map =
+import type { Element } from "./model";
+const barrio =
   box(-245, -175, -9, 490, 350, 9, 5) +
   inPlane(
     TOP(-245, -175, 0),
@@ -64,12 +64,25 @@ const bench =
     `<path class="detail" d="M11 18V0 M11 11L2 5 M11 9l8 -7"/>`,
   );
 
-export function environment(kind: Kind) {
-  return kind === "map"
-    ? map
-    : kind === "shop"
+const cruce =
+  box(-245, -175, -9, 490, 350, 9, 5) +
+  inPlane(
+    TOP(-245, -175, 0),
+    `<path class="map-road" d="M0 250H110V0h32v250h348v32H142v68h-32v-68H0Z"/><path class="detail extras" stroke-dasharray="5 8" d="M126 0v238M0 266h98M154 266h336M126 294v56"/><path class="detail" d="M20 20h70v90H20zM165 18h145v80H165zM340 20h130v102H340zM167 122h160v112H167zM20 302h70v28H20zM165 302h145v28H165zM340 302h130v28H340z"/><path class="detail extras" d="M112 236h28M112 241h28M112 291h28M112 296h28M96 252v28M101 252v28M151 252v28M156 252v28"/>`,
+  );
+const plaza =
+  box(-245, -175, -9, 490, 350, 9, 5) +
+  inPlane(
+    TOP(-245, -175, 0),
+    `<circle class="map-road" cx="245" cy="175" r="135"/><circle class="detail" cx="245" cy="175" r="115"/><path class="detail" d="M0 165h110v20H0M380 165h110v20H380M235 0v40h20V0M235 310v40h20v-40"/><circle class="detail" cx="55" cy="70" r="26"/><circle class="detail" cx="435" cy="70" r="26"/><circle class="detail" cx="55" cy="280" r="26"/><circle class="detail" cx="435" cy="280" r="26"/><path class="detail extras" d="M40 70h30M55 55v30M420 70h30M435 55v30M40 280h30M55 265v30M420 280h30M435 265v30"/>`,
+  );
+const maps = { barrio, cruce, plaza };
+export function environment(e: Element) {
+  return e.kind === "map"
+    ? maps[e.mapVariant]
+    : e.kind === "shop"
       ? shop
-      : kind === "bench"
+      : e.kind === "bench"
         ? bench
         : tree(0, 0);
 }

@@ -22,6 +22,7 @@ const result = await build({
   absWorkingDir: here,
   entryPoints: ["src/app.tsx"],
   bundle: true,
+  loader: { ".svg": "text" },
   write: false,
   minify: true,
   format: "iife",
@@ -62,10 +63,12 @@ notices += "\n\n" + (await readFile(join(here, "LICENSE-shadcn.txt"), "utf8"));
 notices +=
   "\n\nAnatomy curves kit\n" +
   (await readFile(join(here, "src/vendor/anatomy/LICENSE"), "utf8"));
-const script = result.outputFiles[0].text.replaceAll("</script", "<\\/script").replace(/^[ \t]+$/gm, "");
+const script = result.outputFiles[0].text
+  .replaceAll("</script", "<\\/script")
+  .replace(/^[ \t]+$/gm, "");
 await writeFile(
   join(root, "tools/escena-isometrica.html"),
-  `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VecinoClub · Taller de escena</title><style>${css}</style></head><body><div id="app"></div><!--\n${notices
+  `<!doctype html><html lang="es" class="dark" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VecinoClub · Taller de escena</title><style>${css}</style></head><body><div id="app"></div><!--\n${notices
     .replaceAll("-->", "-- >")
     .replace(/\r\n/g, "\n")
     .replace(/[ \t]+$/gm, "")}\n--><script>${script}</script></body></html>`,

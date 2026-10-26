@@ -1,8 +1,15 @@
 export type Kind = "map" | "shop" | "tree" | "bench" | "punto" | "isotipo";
+export type MapVariant = "barrio" | "cruce" | "plaza";
+export const mapNames: Record<MapVariant, string> = {
+  barrio: "Barrio",
+  cruce: "Cruce",
+  plaza: "Plaza",
+};
 export type Orientation = "NE" | "SE" | "SO" | "NO";
 export type Element = {
   id: string;
   kind: Kind;
+  mapVariant: MapVariant;
   name: string;
   x: number;
   y: number;
@@ -21,7 +28,7 @@ export type Element = {
   awning: boolean;
 };
 export type Scene = {
-  version: 2;
+  version: 3;
   global: {
     background: string;
     zoom: number;
@@ -47,6 +54,7 @@ export function createElement(
   return {
     id,
     kind,
+    mapVariant: "barrio",
     name: names[kind],
     x: 0,
     y: 0,
@@ -57,11 +65,13 @@ export function createElement(
         : kind === "isotipo"
           ? "#fb772a"
           : kind === "tree"
-            ? "#ece4d1"
-            : "#fcf4df",
-    stroke: kind === "punto" || kind === "isotipo" ? "#c46b34" : "#c6b29d",
+            ? "#332f2a"
+            : kind === "shop"
+              ? "#27231e"
+              : "#211e1a",
+    stroke: kind === "punto" || kind === "isotipo" ? "#fb7629" : "#c6b29d",
     accent: kind === "punto" ? "#f5f4f2" : "#fb772a",
-    line: 0.85,
+    line: 0.7,
     opacity: 1,
     visible: true,
     orientation: "SO",
@@ -90,8 +100,8 @@ export function initialScene(): Scene {
   Object.assign(elements[4], { name: "Árbol oeste", x: -229.5, y: -32.5 });
   Object.assign(elements[7], { x: 220, y: 70, scale: 0.6 });
   return {
-    version: 2,
-    global: { background: "#fcf4df", zoom: 1, duration: 4.5, paused: false },
+    version: 3,
+    global: { background: "#171717", zoom: 1, duration: 4.5, paused: false },
     elements,
   };
 }

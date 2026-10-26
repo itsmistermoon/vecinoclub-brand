@@ -6,9 +6,10 @@ import { character } from "./characters";
 export const sceneCSS = `
 .face{fill:var(--fill);stroke:var(--stroke);stroke-width:var(--line);stroke-linejoin:round}
 .detail{fill:none;stroke:var(--stroke);stroke-width:var(--line);stroke-linecap:round;stroke-linejoin:round}
+.map-road{fill:var(--accent);fill-opacity:.07;stroke:var(--stroke);stroke-width:var(--line);vector-effect:non-scaling-stroke}
 .accent{fill:var(--accent);stroke:var(--stroke);stroke-width:var(--line)}
-.iso-fill{fill:var(--fill)}.iso-shade[data-shade="0"]{fill:var(--shade-0)}.iso-shade[data-shade="1"]{fill:var(--shade-1)}.iso-shade[data-shade="2"]{fill:var(--shade-2)}.iso-shade[data-shade="3"]{fill:var(--shade-3)}.iso-top{fill:var(--shade-4)}.iso-line{fill:none;stroke:var(--stroke);stroke-width:var(--line);vector-effect:non-scaling-stroke}.mesh-edge{fill:none;stroke:var(--stroke);stroke-width:var(--line);stroke-linejoin:round}
-.face,.detail,.accent,.mesh-edge{vector-effect:non-scaling-stroke}
+.iso-fill{fill:var(--fill)}.iso-shade[data-shade="0"]{fill:var(--shade-0)}.iso-shade[data-shade="1"]{fill:var(--shade-1)}.iso-shade[data-shade="2"]{fill:var(--shade-2)}.iso-shade[data-shade="3"]{fill:var(--shade-3)}.iso-top{fill:var(--shade-4)}.iso-line{fill:none;stroke:var(--stroke);stroke-width:var(--line);vector-effect:non-scaling-stroke}
+.face,.detail,.accent{vector-effect:non-scaling-stroke}
 [data-object]{cursor:grab;outline:none;touch-action:none}[data-object].dragging{cursor:grabbing}
 .hover-outline{opacity:0;pointer-events:none}
 [data-object]:hover .hover-outline,[data-object]:focus-visible .hover-outline{opacity:1}
@@ -82,8 +83,8 @@ export class SceneRenderer {
         shadow.setAttribute("cy", String(b + 43));
         shadow.setAttribute("rx", "26");
         shadow.setAttribute("ry", "9");
-        shadow.setAttribute("fill", "#171717");
-        shadow.setAttribute("opacity", ".07");
+        shadow.setAttribute("fill", "#000000");
+        shadow.setAttribute("opacity", ".24");
         node.append(shadow);
         const animated = document.createElementNS(NS, "g");
         animated.classList.toggle("idle", floating(e));
@@ -102,6 +103,7 @@ export class SceneRenderer {
       }
       const { node, content, hover, shadow } = entry;
       node.dataset.kind = e.kind;
+      if (e.kind === "map") node.dataset.mapVariant = e.mapVariant;
       node.dataset.orientation = e.orientation;
       node.dataset.selected = String(e.id === selected);
       node.dataset.details = String(e.details);
@@ -126,11 +128,11 @@ export class SceneRenderer {
       shadow.style.display = floating(e) && e.shadow ? "" : "none";
       const key = floating(e)
         ? `${e.kind}/${e.orientation}/${e.fill}/${e.accent}`
-        : e.kind;
+        : `${e.kind}/${e.mapVariant}`;
       if (entry.key !== key) {
         const geometry = floating(e)
           ? character(e)
-          : { body: environment(e.kind), hoverFill: "" };
+          : { body: environment(e), hoverFill: "" };
         content.innerHTML = geometry.body;
         hover.innerHTML = geometry.body + geometry.hoverFill;
         entry.key = key;

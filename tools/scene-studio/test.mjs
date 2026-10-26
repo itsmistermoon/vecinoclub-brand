@@ -90,7 +90,7 @@ try {
     await page.getByRole("menuitem", { name: action, exact: true }).click();
   };
   let data = await config();
-  check(data.version === 2, "current JSON schema");
+  check(data.version === 3, "current JSON schema");
   check(data.elements.length === 8, "eight initial independent elements");
   check(
     data.elements.filter((e) => e.kind === "tree").length === 3,
@@ -110,6 +110,48 @@ try {
       .evaluate((n) => getComputedStyle(n).fill)) === "none",
     "interior details stay unfilled",
   );
+  check(
+    await page.evaluate(
+      () => document.documentElement.dataset.theme === "dark",
+    ),
+    "brand dark theme active",
+  );
+  check(
+    (await page.evaluate(
+      () => getComputedStyle(document.body).backgroundColor,
+    )) === "rgb(23, 23, 23)",
+    "dark background matches brand token",
+  );
+  check(
+    (await page
+      .locator(".settings-panel")
+      .evaluate((n) => getComputedStyle(n).backgroundColor)) ===
+      "rgb(33, 30, 26)",
+    "dark surface matches brand token",
+  );
+  await select("map-1");
+  const mapPaths = [];
+  for (const variant of ["barrio", "cruce", "plaza"]) {
+    await page.locator(`[data-map-variant-control="${variant}"]`).click();
+    check(
+      (await config()).elements.find((e) => e.id === "map-1").mapVariant ===
+        variant,
+      `map ${variant}: JSON variant`,
+    );
+    check(
+      (await page
+        .locator('[data-object="map-1"]')
+        .getAttribute("data-map-variant")) === variant,
+      `map ${variant}: rendered variant`,
+    );
+    mapPaths.push(
+      await page.locator('[data-object="map-1"] .model-content').innerHTML(),
+    );
+    await page.screenshot({ path: join(evidence, `map-${variant}.png`) });
+  }
+  check(new Set(mapPaths).size === 3, "three distinct map geometries");
+  await page.locator("[data-map-variant-control=barrio]").click();
+  await select("punto-7");
   await page.screenshot({ path: join(evidence, "studio-default.png") });
   for (const kind of ["punto", "isotipo"]) {
     const object = data.elements.find((e) => e.kind === kind);
@@ -132,6 +174,33 @@ try {
           .evaluate((n) => getComputedStyle(n).animationName)) === "float",
         `${kind} ${orientation}: idle active`,
       );
+      if (kind === "punto") {
+        const circle = await node
+          .locator(".model-content [data-plane=sphere] .iso-edge")
+          .evaluate((path) => {
+            const box = path.getBBox(),
+              cx = box.x + box.width / 2,
+              cy = box.y + box.height / 2,
+              r = box.width / 2;
+            let error = 0;
+            for (let i = 0; i < 48; i++) {
+              const p = path.getPointAtLength((path.getTotalLength() * i) / 48);
+              error = Math.max(
+                error,
+                Math.abs(Math.hypot(p.x - cx, p.y - cy) - r),
+              );
+            }
+            return { ratio: box.width / box.height, error, r };
+          });
+        check(
+          Math.abs(circle.ratio - 1) < 1e-6,
+          `head ${orientation}: circular projected silhouette`,
+        );
+        check(
+          circle.error < 0.02,
+          `head ${orientation}: constant projected radius within 0.02px sampling tolerance`,
+        );
+      }
       paths.push(await node.locator(".model-content").innerHTML());
       const saved = await config();
       check(
@@ -192,6 +261,7 @@ try {
     saved = (await config()).elements.find((e) => e.kind === "isotipo");
     check(saved[key] === min, `isotipo slider ${key}: minimum`);
   }
+  await page.getByRole("tab", { name: "Escena", exact: true }).click();
   for (const [label, key, max, min] of [
     ["Zoom", "zoom", 1.2, 0.65],
     ["Duración idle · s", "duration", 12, 1],
@@ -332,12 +402,24 @@ try {
     "element menu toggles visibility",
   );
   await menu("Árbol norte", "Mostrar");
+  await page
+    .getByRole("button", { name: "Añadir elemento", exact: true })
+    .click();
+  await page
+    .getByRole("menuitem", { name: "Mapa · Cruce", exact: true })
+    .click();
+  check(
+    (await config()).elements.some(
+      (e) => e.kind === "map" && e.mapVariant === "cruce" && e.id !== "map-1",
+    ),
+    "add independent crossing map",
+  );
   const jsonWait = page.waitForEvent("download");
   await page.locator("#json").click();
   const actualJSON = JSON.parse(
     await readFile(await (await jsonWait).path(), "utf8"),
   );
-  check(actualJSON.version === 2, "actual JSON download");
+  check(actualJSON.version === 3, "actual JSON download");
   const promise = page.waitForEvent("download");
   await page.locator("#export").click();
   const svgDownload = await promise;
@@ -356,6 +438,7 @@ try {
     orientations: [...document.querySelectorAll("[data-object]")].map((e) => ({
       id: e.dataset.object,
       orientation: e.dataset.orientation,
+      mapVariant: e.dataset.mapVariant,
     })),
   }));
   check(
@@ -372,6 +455,19 @@ try {
       data.elements.find((e) => e.id === item.id).orientation ===
         item.orientation,
       "SVG projected orientations equal JSON",
+    );
+  const exportedMaps = await page
+    .locator("[data-kind=map]")
+    .evaluateAll((nodes) =>
+      nodes.map((n) => ({
+        id: n.dataset.object,
+        variant: n.dataset.mapVariant,
+      })),
+    );
+  for (const map of exportedMaps)
+    check(
+      data.elements.find((e) => e.id === map.id).mapVariant === map.variant,
+      "SVG map variant equals JSON",
     );
   await page.emulateMedia({ reducedMotion: "reduce" });
   check(
