@@ -7,6 +7,7 @@ Fuente de verdad de la identidad visual de VecinoClub, independiente de la plata
 - `assets/app-icons/`: iconos de aplicación.
 - [Exploración de mascota](mascota-propuesta.html): abrir en el navegador para revisar la propuesta de Punto.
 - [Guía de generación de Punto](assets/mascot/GENERATION_GUIDE.md): referencias y reglas para los recursos de `assets/mascot/` y el material descartado de `assets/mascot-archive/`.
+- [Taller de escena isométrica](tools/escena-isometrica.html): editor SVG autónomo para diseño; [uso, licencias y validación](tools/escena-isometrica.md).
 - `fonts/`: Rubik y Barlow Condensed, con sus licencias OFL.
 - `DESIGN.md`: reglas de uso y límites de la marca.
 
