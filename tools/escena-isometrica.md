@@ -38,6 +38,6 @@ El smoke test ejecuta controles públicos del DOM y las descargas reales, sin ac
 chrome-devtools-axi run < /ruta/al/repo/tools/tests/escena-isometrica.browser.js
 ```
 
-Comprueba selección por lista, dibujo y teclado; ausencia de controles de importación y presets; colores; extremos de los deslizadores; desplazamientos; visibilidad; controles globales; pausa; continuidad del bucle; exportación JSON y SVG, carga autónoma como imagen, metadata y el nombre de animación calculado en el SVG autónomo según la preferencia de movimiento reducida del navegador.
+El smoke test comprueba selección por lista, dibujo y teclado; ausencia de controles de importación y presets; colores; extremos de deslizadores; desplazamientos; visibilidad; controles globales; pausa; continuidad del bucle en movimiento normal; exportación JSON y SVG, carga autónoma como imagen y metadata. Para verificar movimiento reducido con emulación real en Chrome, ejecutar `node tools/tests/escena-isometrica.reduced-motion.mjs` con Playwright disponible. Ese test emula `reduce` y comprueba que el nombre de animación calculado es `none` tanto en el editor como en el SVG autónomo.
 
 La revisión visual y la verificación independiente de no-mistakes son pasos separados: un smoke test automatizado no certifica por sí solo la fidelidad de la ilustración.
