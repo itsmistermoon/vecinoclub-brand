@@ -3,7 +3,6 @@
 tools/*
 !tools/escena-isometrica.html
 !tools/escena-isometrica.md
-!tools/tests/
-tools/tests/*
-!tools/tests/escena-isometrica.browser.js
-!tools/tests/escena-isometrica.reduced-motion.mjs
+!tools/scene-studio/
+tools/scene-studio/node_modules/
+tools/scene-studio/.build/
