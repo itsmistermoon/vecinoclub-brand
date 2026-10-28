@@ -14,6 +14,14 @@ Los valores `--vc-success`, `--vc-warning` y `--vc-danger` documentan el aspecto
 
 Rubik para texto e interfaz. Barlow Condensed para titulares o énfasis de marca. Los archivos en `fonts/` se distribuyen bajo las licencias OFL incluidas. Usar Barlow Condensed con moderación para preservar legibilidad.
 
+## Lenguaje de imagen v1
+
+La dirección visual combina fotografía documental cálida con una vista fiel del producto. La fotografía aporta contexto cotidiano y humano; las capturas o vistas de producto deben representar la interfaz real, sin inventar funciones ni alterar su apariencia para ajustarla a la escena. La fotografía y la vista de producto se complementan, y la interfaz conserva siempre su legibilidad.
+
+El pin de VecinoClub es una pieza gráfica estática de marca. Mantenerlo separado de los indicadores que comunican progreso o estado; no usarlo como indicador de avance. Para acciones y estados de interfaz, preferir iconos de trazo sencillo de Lucide. Punto puede aparecer ocasionalmente como apoyo expresivo, fuera del control principal y sin sustituir iconos, etiquetas o información funcional.
+
+Las imágenes generadas con IA deben identificarse claramente como ilustrativas.
+
 ## Logotipos
 
 Las variantes oficiales están en `assets/identity/`. Elegir la versión que mantenga contraste suficiente sobre el fondo. Usar variantes monocromáticas cuando la personalización de un tenant requiera separar la marca de un acento ajeno. No recolorear el SVG ni editar sus proporciones en cada consumidor.
