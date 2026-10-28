@@ -20,7 +20,6 @@ La dirección visual combina fotografía documental cálida con una vista fiel d
 
 El pin de VecinoClub es una pieza gráfica estática de marca. Mantenerlo separado de los indicadores que comunican progreso o estado; no usarlo como indicador de avance. Para acciones y estados de interfaz, preferir iconos de trazo sencillo de Lucide. Punto puede aparecer ocasionalmente como apoyo expresivo, fuera del control principal y sin sustituir iconos, etiquetas o información funcional.
 
-Las imágenes generadas con IA deben identificarse claramente como ilustrativas. No presentarlas como documentación de comercios reales ni atribuirles resultados, citas o testimonios de comercios reales. Si una superficie no tiene identidad de tenant, usar una base neutral y no inferir ni asignar identidad de comercio.
 
 ## Logotipos
 
