@@ -23,7 +23,14 @@ Los controles permiten sacar piezas del encuadre deliberadamente. El lienzo de e
 
 ## Escenas guardadas
 
-`tools/scenes/vecinoclub-escena.svg` es la escena final de la landing y `vecinoclub-escena.json` su estado editable (formato 5). Para retomarla: abrir `tools/escena-isometrica.html` en Chrome y usar **Cargar JSON** (o arrastrar el archivo). Para crear otras escenas, empezar de cero o cargar una existente, y guardar el resultado como un par SVG + JSON en la misma carpeta.
+`tools/scenes/vecinoclub-escena.svg` es la escena final de la landing y `vecinoclub-escena.json` su estado editable (formato 5; se actualiza al cargar). Para retomarla: abrir `tools/escena-isometrica.html` en Chrome y usar **Cargar JSON** (o arrastrar el archivo).
+
+**Crear y guardar otra escena:**
+
+1. Abrir `tools/escena-isometrica.html` y partir de la escena inicial, o cargar una existente con **Cargar JSON**.
+2. Editar piezas, orden, colores y movimiento.
+3. Pulsar **Guardar JSON** y **Exportar SVG**, y mover ambos archivos a `tools/scenes/` con el mismo nombre base (`mi-escena.json` y `mi-escena.svg`).
+4. Confirmar el par en git; `.gitignore` ya admite `tools/scenes/`.
 
 ## Volumen y marca
 
@@ -49,7 +56,7 @@ Se admite el **formato 6** completo y el **formato 5**, que se actualiza al carg
 
 ## Comparación de motores y licencias
 
-Se renderizaron **24 vistas**: Punto e isotipo × NE/SE/SO/NO × iso-figure, Colorfigures y Anatomy. Se usaron las mismas proporciones objetivo, anatomía, contorno del isotipo, color de marca y proyección. Se compararon con las vistas de mascota, la referencia hairline de la escena y la galería Plinth. El HTML y la lámina de comparación están en el expediente externo de firstmate, junto con las ocho capturas del editor final.
+Se renderizaron **24 vistas**: Punto e isotipo × NE/SE/SO/NO × iso-figure, Colorfigures y Anatomy. Se usaron las mismas proporciones objetivo, anatomía, contorno del isotipo, color de marca y proyección. Se compararon con las vistas de mascota, la referencia hairline de la escena y la galería Plinth.
 
 | Opción probada | Resultado observado | Decisión |
 | --- | --- | --- |
@@ -90,4 +97,4 @@ La compilación usa esbuild y Tailwind para incrustar todo, incluidas fuentes y 
 
 Las pruebas ejecutan la interfaz pública: cuatro orientaciones por figura y por los cinco comercios, reflexión horizontal y su exportación, interacción HEX/paleta/teclado/puntero del selector de color, medición del modelo contra píxeles de la hoja canónica con controles negativos, las cuatro variantes de mapa y su exportación, tokens oscuros, idle, extremos de sliders, arrastre real con ratón, rueda con y sin Alt, hover exterior sin recolorear interiores, menús, apilado de Plaza en ambos extremos, movimientos de un nivel, arrastre de capas por encima y debajo, persistencia del idle al reordenar, altura visible de las pistas Slider, alta/baja/duplicación, descarga JSON/SVG y concordancia de metadata, movimiento reducido real con control negativo, continuidad del bucle y móvil de 390 px sin desbordamiento horizontal. La revisión independiente por no-mistakes se hace después del primer handoff del HTML actualizado.
 
-Resultado local: **247 comprobaciones de interfaz, 80 de medición y 49 de documentos aprobadas** en Chrome offline, sin errores de consola; TypeScript y build aprobados. Se capturaron la escena por defecto, las 20 vistas de comercios, el selector de color, el mapa compacto y tres configuraciones extremas con sus JSON. El test de anatomía vuelve a medir la hoja original con su hash fijado; compara 56 medidas dentro de ±5% relativo, verifica los ojos visibles y comprueba que una cabeza alterada +15% falle en las tres vistas. Los brazos incluyen anotación manual con incertidumbre declarada. La suite de documentos incluye el archivo proporcionado `vecinoclub-escena.json`, versionado como fixture en `scene-studio/fixtures/saved-scene-v5.json`; verifica ida y vuelta, carga con IDs reutilizados para otro tipo, escena vacía, colores abreviados, errores de esquema/versión, límites y móvil. Las capturas actualizadas están en el expediente externo `studio-v7/`. La primera entrega de esta revisión es el HTML para prueba; se conserva sin commit ni push por instrucción de firstmate, pendiente del paso no-mistakes acordado. Estas pruebas locales no sustituyen la revisión independiente.
+Resultado local: **247 comprobaciones de interfaz, 80 de medición y 56 de documentos aprobadas** en Chrome offline, sin errores de consola; TypeScript y build aprobados. Se capturaron la escena por defecto, las 20 vistas de comercios, el selector de color, el mapa compacto y tres configuraciones extremas con sus JSON. El test de anatomía vuelve a medir la hoja original con su hash fijado; compara 56 medidas dentro de ±5% relativo, verifica los ojos visibles y comprueba que una cabeza alterada +15% falle en las tres vistas. Los brazos incluyen anotación manual con incertidumbre declarada. La suite de documentos incluye el archivo proporcionado `vecinoclub-escena.json`, versionado en `scenes/vecinoclub-escena.json`; verifica ida y vuelta, carga con IDs reutilizados para otro tipo, escena vacía, colores abreviados, errores de esquema/versión, límites y móvil.
