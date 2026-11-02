@@ -22,7 +22,7 @@ const result = await build({
   absWorkingDir: here,
   entryPoints: ["src/app.tsx"],
   bundle: true,
-  loader: { ".svg": "text" },
+  loader: { ".svg": "text", ".png": "dataurl" },
   write: false,
   minify: true,
   format: "iife",

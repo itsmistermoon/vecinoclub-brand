@@ -2,7 +2,7 @@ import type { Element, Scene } from "./model";
 import { floating } from "./model";
 import { P } from "./projection";
 import { environment } from "./environment";
-import { character } from "./characters";
+import { character, GOTA_FRAMES } from "./characters";
 export const sceneCSS = `
 .face{fill:var(--fill);stroke:var(--stroke);stroke-width:var(--line);stroke-linejoin:round}
 .detail{fill:none;stroke:var(--stroke);stroke-width:var(--line);stroke-linecap:round;stroke-linejoin:round}
@@ -16,8 +16,12 @@ export const sceneCSS = `
 [data-details=false] .extras,[data-awning=false] .awning{display:none}
 .idle{transform-box:view-box;animation:float var(--duration) ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0) rotate(calc(-1 * var(--tilt)))}50%{transform:translateY(calc(-1 * var(--amplitude))) rotate(var(--tilt))}}
-.paused .idle{animation-play-state:paused}
-@media(prefers-reduced-motion:reduce){.idle{animation:none!important}}
+[data-part=gota-eye]{fill:var(--accent)}[data-part=shine]{stroke:var(--accent);stroke-width:5.5;opacity:var(--shine)}
+.spin-frame{opacity:0}.spin-frame:first-child{opacity:1}
+[data-spin=true] .spin-frame{animation:spin-frame var(--spin) steps(1,end) infinite;animation-delay:calc(var(--i)*var(--spin)/${GOTA_FRAMES})}
+@keyframes spin-frame{0%{opacity:1}${(100 / GOTA_FRAMES).toFixed(4)}%{opacity:0}100%{opacity:0}}
+.paused .idle,.paused .spin-frame{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.idle,.spin-frame{animation:none!important}}
 `;
 const NS = "http://www.w3.org/2000/svg";
 export function anchor(e: Element) {
@@ -67,10 +71,8 @@ export class SceneRenderer {
         entry.node.remove();
         this.nodes.delete(id);
       }
-    const sorted = [...state.elements].sort(
-      (a, b) => this.depth(a) - this.depth(b),
-    );
-    for (const e of sorted) {
+    const ordered = state.elements;
+    for (const e of ordered) {
       let entry = this.nodes.get(e.id);
       const [a, b] = anchor(e);
       if (!entry) {
@@ -105,14 +107,17 @@ export class SceneRenderer {
       node.dataset.kind = e.kind;
       if (e.kind === "map") node.dataset.mapVariant = e.mapVariant;
       node.dataset.orientation = e.orientation;
+      node.dataset.shopVariant = e.shopVariant;
+      node.dataset.flipX = String(e.flipX);
       node.dataset.selected = String(e.id === selected);
       node.dataset.details = String(e.details);
+      node.dataset.spin = String(e.kind === "gota" && e.spinning);
       node.dataset.awning = String(e.awning);
       node.setAttribute("aria-label", `Editar ${e.name}`);
       node.setAttribute("aria-pressed", String(e.id === selected));
       node.setAttribute(
         "transform",
-        `translate(${a + e.x} ${b + e.y}) scale(${e.scale}) translate(${-a} ${-b})`,
+        `translate(${a + e.x} ${b + e.y}) scale(${e.flipX ? -e.scale : e.scale} ${e.scale}) translate(${-a} ${-b})`,
       );
       node.setAttribute("opacity", String(e.opacity));
       node.style.display = e.visible ? "" : "none";
@@ -123,34 +128,47 @@ export class SceneRenderer {
         line: e.line,
         amplitude: `${e.amplitude}px`,
         tilt: `${e.tilt}deg`,
+        spin: `${e.spin}s`,
+        shine: e.shine,
       }))
         node.style.setProperty(`--${key}`, String(value));
       shadow.style.display = floating(e) && e.shadow ? "" : "none";
       const key = floating(e)
         ? `${e.kind}/${e.orientation}/${e.fill}/${e.accent}`
-        : `${e.kind}/${e.mapVariant}`;
+        : `${e.kind}/${e.mapVariant}/${e.shopVariant}/${e.orientation}`;
       if (entry.key !== key) {
         const geometry = floating(e)
           ? character(e)
-          : { body: environment(e), hoverFill: "" };
+          : (() => {
+              const body = environment(e);
+              return { body, hoverFill: "", outline: body };
+            })();
         content.innerHTML = geometry.body;
-        hover.innerHTML = geometry.body + geometry.hoverFill;
+        hover.innerHTML = geometry.outline + geometry.hoverFill;
         entry.key = key;
       }
-      // Append only if ordering changed; moving an existing idle node can restart CSS animation.
+      // State-preserving moves below keep every existing idle animation running.
     }
     const current = [...this.composition.children].map(
       (el) => (el as SVGElement).dataset.object,
     );
-    if (current.join() !== sorted.map((e) => e.id).join())
-      for (const e of sorted)
-        this.composition.append(this.nodes.get(e.id)!.node);
-  }
-  private depth(e: Element) {
-    return e.kind === "map" ? -10000 : floating(e) ? 10000 : anchor(e)[1] + e.y;
+    if (current.join() !== ordered.map((e) => e.id).join()) {
+      for (const [index, e] of ordered.entries()) {
+        const node = this.nodes.get(e.id)!.node,
+          reference = this.composition.children[index] || null;
+        if (node === reference) continue;
+        if (node.parentNode === this.composition)
+          this.composition.moveBefore(node, reference);
+        else this.composition.insertBefore(node, reference);
+      }
+    }
   }
   export(state: Scene) {
-    const clone = this.svg.cloneNode(true) as SVGSVGElement;
+    // Render the document afresh so selection, drag history and animation phase
+    // cannot change the serialized export. Saving/loading is byte-stable.
+    const clone = document.createElementNS(NS, "svg");
+    clone.setAttribute("viewBox", "0 0 1000 760");
+    new SceneRenderer(clone).update(state, "");
     clone.setAttribute("xmlns", NS);
     clone.setAttribute("width", "1000");
     clone.setAttribute("height", "760");

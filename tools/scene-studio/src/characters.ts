@@ -6,7 +6,15 @@ import type { Element } from "./model";
 const turns = { SO: 0, SE: -Math.PI / 2, NE: Math.PI, NO: Math.PI / 2 };
 const dot = (a: V3, b: V3) => a.reduce((sum, v, i) => sum + v * b[i], 0);
 function tint(hex: string, amount: number) {
-  const v = hex.match(/[0-9a-f]{2}/gi)!.map((s) => parseInt(s, 16));
+  const rgb =
+    hex.length === 4
+      ? hex
+          .slice(1)
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : hex.slice(1);
+  const v = rgb.match(/../g)!.map((s) => parseInt(s, 16));
   return (
     "#" +
     v
@@ -23,16 +31,30 @@ const pointsD = (points: number[][], close = true) =>
     .map((p, i) => `${i ? "L" : "M"}${p.map((v) => v.toFixed(3)).join(" ")}`)
     .join(" ") + (close ? "Z" : "");
 type Ring = { z: number; r: number; cx?: number; cy?: number };
-export const puntoHead = { center: [0, 0, 133] as V3, radius: 39 };
+export const puntoHead: Ring[] = [
+  { z: 97, r: 24.5 },
+  { z: 98, r: 30 },
+  { z: 102, r: 36 },
+  { z: 111, r: 42 },
+  { z: 125, r: 45.2 },
+  { z: 137, r: 45.5 },
+  { z: 150, r: 42 },
+  { z: 162, r: 32 },
+  { z: 170, r: 14 },
+  { z: 172, r: 0.1 },
+];
 const torso: Ring[] = [
-  { z: 0, r: 1.5 },
-  { z: 12, r: 8 },
-  { z: 30, r: 18 },
-  { z: 52, r: 27 },
-  { z: 73, r: 29 },
-  { z: 88, r: 25 },
-  { z: 94, r: 14 },
-  { z: 95, r: 0.1 },
+  { z: 0, r: 0.1 },
+  { z: 1.5, r: 4.8 },
+  { z: 5.16, r: 8.62 },
+  { z: 12, r: 13.8 },
+  { z: 25, r: 23 },
+  { z: 37.84, r: 29.65 },
+  { z: 53, r: 35.7 },
+  { z: 72, r: 39.5 },
+  { z: 87, r: 36 },
+  { z: 97, r: 26 },
+  { z: 99, r: 0.1 },
 ];
 // Anatomy curves, configured to exactly match projection.ts (true 30° screen axes).
 export const characterProjection = {
@@ -41,8 +63,8 @@ export const characterProjection = {
   azimuth: 45,
   elevation: (Math.atan(1 / Math.sqrt(2)) * 180) / Math.PI,
 };
-function renderer(e: Element) {
-  const angle = turns[e.orientation],
+function renderer(e: Element, projection = characterProjection, spin = 0) {
+  const angle = turns[e.orientation] + spin,
     cos = Math.cos(angle),
     sin = Math.sin(angle);
   const rotate = ([x, y, z]: V3): V3 => [
@@ -50,7 +72,7 @@ function renderer(e: Element) {
     x * sin + y * cos,
     z,
   ];
-  const project = (p: V3) => kit.iso(rotate(p), characterProjection);
+  const project = (p: V3) => kit.iso(rotate(p), projection);
   const faces: { depth: number; svg: string }[] = [];
   const palette = [-0.18, -0.1, -0.03, 0.04, 0.12].map((value) =>
     tint(e.fill, value),
@@ -64,62 +86,68 @@ function renderer(e: Element) {
     );
     if (flip) n = n.map((v) => -v);
     const rn = rotate(n as V3);
-    if (lathe.dot3(rn, lathe.viewOf(characterProjection)) <= 0) return;
+    if (lathe.dot3(rn, lathe.viewOf(projection)) <= 0) return;
     faces.push({
       depth:
-        points.reduce((sum, p) => sum + dot(rotate(p), [1, 1, 1]), 0) /
+        points.reduce((sum, p) => sum + kit.depthOf(rotate(p), projection), 0) /
         points.length,
-      svg: `<path data-plane="surface" d="${kit.pathOf(points.map(project), true)}" fill="${color === e.fill ? palette[lathe.toneOf(rn, characterProjection)] : color}"/>`,
+      svg: `<path data-plane="surface" d="${kit.pathOf(points.map(project), true)}" fill="${color === e.fill ? palette[lathe.toneOf(rn, projection)] : color}"/>`,
     });
   }
-  function surface(rings: Ring[]) {
+  function surface(
+    rings: Ring[],
+    part = "torso",
+    depthScale = 1,
+    color = e.fill,
+    lean = 0,
+  ) {
     const cx = rings.reduce((sum, r) => sum + (r.cx || 0), 0) / rings.length;
     const cy = rings[0].cy || 0;
     const frame = {
       o: rotate([cx, cy, 0]),
-      a: [0, 0, 1],
+      a: rotate([lean, 0, 1]),
       u: rotate([1, 0, 0]),
-      v: rotate([0, 1, 0]),
+      v: rotate([0, depthScale, 0]),
     };
     const paths = lathe.lathe(
       rings.map((r) => [r.z, r.r, true]),
       frame,
-      characterProjection,
+      projection,
       { rims: "none", steps: 64 },
     );
     let svg = kit.solidSvg(paths, { crease: "none" });
-    const colors = palette
+    const colors = (
+      color === e.fill
+        ? palette
+        : [-0.12, -0.06, 0, 0.03, 0.06].map((amount) => tint(color, amount))
+    )
       .map((color, index) => `--shade-${index}:${color}`)
       .join(";");
-    svg = svg.replace("<g", `<g data-plane="lathe" style="${colors}"`);
+    svg = svg.replace(
+      "<g",
+      `<g data-part="${part}" data-plane="lathe" style="--fill:${color};${part === "seal" ? "--line:0;" : ""}${colors}"`,
+    );
     faces.push({
-      depth:
-        rings.reduce((sum, r) => sum + r.z, 0) / rings.length +
-        dot(rotate([cx, cy, 0]), [1, 1, 1]),
+      depth: kit.depthOf(
+        rotate([cx, cy, rings.reduce((sum, r) => sum + r.z, 0) / rings.length]),
+        projection,
+      ),
       svg,
     });
   }
-  function sphere(center: V3, radius: number) {
-    const paths = lathe.sphereOf(rotate(center), radius, characterProjection, {
-      steps: 96,
-    });
-    const [cx, cy] = project(center),
-      sr = radius * kit.cameraOf(characterProjection).k;
-    const outline = `M${cx - sr} ${cy}a${sr} ${sr} 0 1 0 ${sr * 2} 0a${sr} ${sr} 0 1 0 ${-sr * 2} 0`;
-    paths.fill = outline;
-    paths.outline = outline;
-    paths.shades[0] = outline;
-    const colors = palette
-      .map((color, index) => `--shade-${index}:${color}`)
-      .join(";");
-    const svg = kit
-      .solidSvg(paths, { crease: "none" })
-      .replace(
-        "<g",
-        `<g data-plane="sphere" data-radius="${radius}" style="${colors}"`,
-      );
-    faces.push({ depth: dot(rotate(center), [1, 1, 1]), svg });
-  }
+  const visible = (p: V3, front: (x: number, z: number) => V3) => {
+    const delta = 0.01,
+      a = front(p[0] + delta, p[2]),
+      b = front(p[0] - delta, p[2]),
+      c = front(p[0], p[2] + delta),
+      d = front(p[0], p[2] - delta);
+    return (
+      dot(
+        rotate([-(a[1] - b[1]) / (2 * delta), 1, -(c[1] - d[1]) / (2 * delta)]),
+        lathe.viewOf(projection) as V3,
+      ) > 0
+    );
+  };
   function mark(
     cx: number,
     cz: number,
@@ -127,17 +155,23 @@ function renderer(e: Element) {
     rz: number,
     color: string,
     front: (x: number, z: number) => V3,
+    part = "mark",
+    lean = 0,
+    samples = 48,
   ) {
-    if (dot(rotate([0, 1, 0]), [1, 1, 1]) <= 0) return;
-    const points = Array.from({ length: 48 }, (_, i) =>
-      front(
-        cx + Math.cos((i / 48) * Math.PI * 2) * rx,
-        cz + Math.sin((i / 48) * Math.PI * 2) * rz,
-      ),
-    );
+    const points = Array.from({ length: samples }, (_, i) => {
+      const u = Math.cos((i / samples) * Math.PI * 2) * rx,
+        v = Math.sin((i / samples) * Math.PI * 2) * rz;
+      return front(
+        cx + u * Math.cos(lean) - v * Math.sin(lean),
+        cz + u * Math.sin(lean) + v * Math.cos(lean),
+      );
+    });
+    const shown = points.filter((p) => visible(p, front));
+    if (shown.length < 3) return;
     faces.push({
       depth: 1000 + cz,
-      svg: `<path d="${kit.pathOf(points.map(project), true)}" fill="${color}"/>`,
+      svg: `<path data-part="${part}" d="${kit.pathOf(shown.map(project), true)}" fill="${color}"/>`,
     });
   }
   return {
@@ -145,7 +179,7 @@ function renderer(e: Element) {
     project,
     polygon,
     surface,
-    sphere,
+    visible,
     mark,
     faces,
     finish: () =>
@@ -155,52 +189,136 @@ function renderer(e: Element) {
         .join(""),
   };
 }
-export function character(e: Element) {
-  const r = renderer(e);
+// Inverted drop: pointed tip down, soft round bulb up. A body of revolution looks
+// identical at every turn angle, so only the eyes are redrawn per spin frame.
+const gotaProfile: Ring[] = [
+  { z: 0, r: 0.1 },
+  { z: 1.5, r: 3.5 },
+  { z: 8, r: 7 },
+  { z: 16, r: 11.5 },
+  { z: 28, r: 19 },
+  { z: 42, r: 28.5 },
+  { z: 58, r: 37.5 },
+  { z: 74, r: 44 },
+  { z: 90, r: 46.5 },
+  { z: 106, r: 44 },
+  { z: 120, r: 38 },
+  { z: 132, r: 29 },
+  { z: 142, r: 18 },
+  { z: 150, r: 8 },
+  { z: 154, r: 0.1 },
+];
+export const GOTA_FRAMES = 90;
+function gota(e: Element, projection: typeof characterProjection) {
+  const r = renderer(e, projection);
+  r.surface(gotaProfile, "body", 1);
+  const outline = r.finish();
+  const curve = lathe.profileCurve(gotaProfile.map((p) => [p.z, p.r, true]));
+  const front = (x: number, z: number): V3 => [
+    x,
+    Math.sqrt(Math.max(0, curve.radius(z) ** 2 - x * x)) + 0.15,
+    z,
+  ];
+  // Gloss: a fixed crescent on the upper-left of the bulb, in screen space.
+  const centre = r.project([0, 0, 92]),
+    unit = r.project([1, 0, 92]),
+    sphere =
+      (46.5 * Math.hypot(unit[0] - centre[0], unit[1] - centre[1])) /
+      Math.sqrt(2 / 3),
+    rho = sphere * 0.76,
+    arc = (degrees: number) =>
+      [
+        centre[0] + rho * Math.cos((degrees * Math.PI) / 180),
+        centre[1] + rho * Math.sin((degrees * Math.PI) / 180),
+      ]
+        .map((v) => v.toFixed(2))
+        .join(" ");
+  const shine = `<path data-part="shine" d="M${arc(-168)} A${rho.toFixed(2)} ${rho.toFixed(2)} 0 0 1 ${arc(-112)}" fill="none" stroke-linecap="round"/>`;
+  let frames = "";
+  for (let i = 0; i < GOTA_FRAMES; i++) {
+    const frame = renderer(e, projection, (i / GOTA_FRAMES) * Math.PI * 2);
+    for (const side of [-1, 1])
+      frame.mark(
+        side * 15.5,
+        98,
+        3.4,
+        10.5,
+        "#ffffff",
+        front,
+        "gota-eye",
+        side * 0.2,
+        24,
+      );
+    frames += `<g class="spin-frame" style="--i:${i}">${frame.finish()}</g>`;
+  }
+  return {
+    body: `${outline}${shine}<g class="spin">${frames}</g>`,
+    hoverFill: "",
+    outline,
+  };
+}
+export function character(e: Element, projection = characterProjection) {
+  if (e.kind === "gota") return gota(e, projection);
+  const r = renderer(e, projection);
   let hoverFill = "";
   if (e.kind === "punto") {
-    // A true sphere and circular torso/arm sections, without anisotropic scaling.
-    r.surface(torso);
+    // Calibrated against all three orthographic crops of the canonical sheet.
+    // Flat lower head, mild depth compression and feature dimensions are measured,
+    // rather than assuming the reference is a sphere.
+    r.surface(torso, "torso", 0.82);
     for (const side of [-1, 1])
-      r.surface([
-        { z: 52, r: 0.1, cx: side * 36 },
-        { z: 55, r: 7, cx: side * 36 },
-        { z: 65, r: 9, cx: side * 34 },
-        { z: 76, r: 8, cx: side * 31 },
-        { z: 83, r: 0.1, cx: side * 28 },
-      ]);
-    r.sphere(puntoHead.center, puntoHead.radius);
+      r.surface(
+        [
+          { z: 43, r: 0.1, cx: side * 74.6 },
+          { z: 46, r: 8, cx: side * 74.6 },
+          { z: 54, r: 12.5, cx: side * 74.6 },
+          { z: 67, r: 13.3, cx: side * 74.6 },
+          { z: 82, r: 11, cx: side * 74.6 },
+          { z: 93, r: 0.1, cx: side * 74.6 },
+        ],
+        "arm",
+        1.36,
+        e.fill,
+        -side * 0.45,
+      );
+    r.surface(puntoHead, "head", 0.925);
+    const headCurve = lathe.profileCurve(
+      puntoHead.map((p) => [p.z, p.r, true]),
+    );
     const headFront = (x: number, z: number): V3 => [
       x,
-      Math.sqrt(
-        Math.max(
-          0,
-          puntoHead.radius ** 2 - x * x - (z - puntoHead.center[2]) ** 2,
-        ),
-      ) + 0.15,
+      Math.sqrt(Math.max(0, headCurve.radius(z) ** 2 - x * x)) * 0.925 + 0.15,
       z,
     ];
-    const profile = lathe.profileCurve(torso.map((p) => [p.z, p.r, true]));
-    const bodyFront = (x: number, z: number): V3 => [
-      x,
-      Math.sqrt(Math.max(0, profile.radius(z) ** 2 - x * x)) + 0.2,
-      z,
-    ];
-    r.mark(0, 65, 12.5, 12.5, e.accent, bodyFront);
-    for (const x of [-13, 13]) {
-      r.mark(x, 134, 3.5, 5.8, "#171717", headFront);
-      r.mark(x + 0.7, 136, 1, 1.2, "#f5f4f2", headFront);
+    const eyeFront = (x: number, z: number): V3 => {
+      const p = headFront(x, z);
+      p[1] -= 5;
+      return p;
+    };
+    const sealRings = Array.from({ length: 33 }, (_, i) => {
+      const t = (i / 32) * Math.PI;
+      return {
+        z: 65 - 20.0 * Math.cos(t),
+        r: 20.7 * Math.sin(t) + 0.001,
+        cy: 34.3,
+      };
+    });
+    r.surface(sealRings, "seal", 4.3 / 20.7, e.accent);
+    for (const x of [-17.9, 19.3]) {
+      r.mark(x, 129.7, 4.4, 6.94, "#171717", eyeFront, "eye");
+      r.mark(x + 0.7, 132, 1.2, 1.6, "#f5f4f2", eyeFront, "highlight");
     }
-    if (r.rotate([0, 1, 0]).reduce((a, b) => a + b, 0) > 0) {
-      const mouth = Array.from({ length: 15 }, (_, i) => {
-        const x = -7 + i;
-        return headFront(x, 119 + 3 * (x / 7) ** 2);
-      });
+    const mouth = Array.from({ length: 49 }, (_, i) => {
+      const x = -8.3 + (i * 17.7) / 48;
+      const p = headFront(x, 116 + 4.12 * ((x - 0.55) / 8.85) ** 2);
+      p[1] -= 1.4 + 2.35 * ((x - 0.55) / 8.85) ** 2;
+      return p;
+    }).filter((p) => r.visible(p, headFront));
+    if (mouth.length > 1)
       r.faces.push({
         depth: 2000,
-        svg: `<path d="${pointsD(mouth.map(r.project), false)}" stroke="#171717" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+        svg: `<path data-part="smile" d="${pointsD(mouth.map(r.project), false)}" stroke="#171717" stroke-width="2.3" fill="none" stroke-linecap="round"/>`,
       });
-    }
   } else {
     // The canonical isotipo path in asset coordinates, uniformly scaled and extruded.
     // Original path coordinates are preserved, including the circular aperture.
@@ -289,5 +407,6 @@ export function character(e: Element) {
     ]).reverse();
     extrude(dotCircle);
   }
-  return { body: r.finish(), hoverFill };
+  const body = r.finish();
+  return { body, hoverFill, outline: body };
 }

@@ -1,0 +1,52 @@
+{
+  "size": [1774, 887],
+  "views": [
+    {
+      "name": "frente",
+      "roi": [0, 10, 650, 870],
+      "head": [127, 29, 557, 386],
+      "eyes": [
+        [236, 197, 279, 263],
+        [411, 197, 453, 263]
+      ],
+      "mouth": [290, 268, 400, 315],
+      "seal": [242, 441, 439, 633],
+      "arm": [40, 407, 215, 642],
+      "full": [40, 29, 641, 847],
+      "smile": [297, 270, 392, 301],
+      "tip": [300, 822, 382, 823],
+      "waist": [200, 667, 482, 668]
+    },
+    {
+      "name": "tres-cuartos",
+      "roi": [650, 10, 1220, 870],
+      "head": [712, 30, 1130, 386],
+      "eyes": [
+        [925, 200, 970, 268],
+        [1077, 203, 1102, 269]
+      ],
+      "mouth": [980, 275, 1070, 320],
+      "seal": [935, 439, 1092, 633],
+      "arm": [683, 408, 835, 644],
+      "full": [683, 30, 1181, 848],
+      "smile": [985, 276, 1062, 308],
+      "tip": [903, 823, 976, 824],
+      "waist": [801, 668, 1069, 669]
+    },
+    {
+      "name": "perfil",
+      "roi": [1220, 10, 1774, 870],
+      "head": [1282, 31, 1680, 386],
+      "eyes": [[1624, 201, 1649, 269]],
+      "mouth": [1650, 274, 1685, 320],
+      "seal": [1624, 440, 1664, 623],
+      "arm": [1380, 400, 1554, 644],
+      "full": [1282, 31, 1680, 848],
+      "smile": [1653, 278, 1674, 307],
+      "tip": [1463, 823, 1527, 824],
+      "waist": [1378, 668, 1616, 669]
+    }
+  ],
+  "sha256": "61e86dd653ccd53556800aab4b6869290ded6c393c36c0e12b3b0297645ba2e4",
+  "method": "Native PNG pixels, alpha>220. Head cropped at neck y=386. Eyes/smile r<70,g<60,b<55; seal r>170,g>150,b>130,r-g<50,g-b<50. Arm boundaries manually annotated (4px uncertainty); no measurements inferred from model. All boxes half-open. Arm width is not asserted because shoulder occlusion is ambiguous; arm height and full silhouette span are measured separately."
+}
