@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 2560 1440" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:affinity="https://www.affinity.studio/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1;">
+    <g transform="matrix(1,0,0,1,-2609.486426,0)">
+        <g id="Construction-Grid---Direction-02" affinity:id="Construction Grid — Direction 02" transform="matrix(1,0,0,1,-1250.513574,188.54)">
+            <rect x="3860" y="-188.54" width="2560" height="1440" style="fill:rgb(247,247,245);"/>
+            <g id="_01-Auxiliary-lines" affinity:id="01 Auxiliary lines" transform="matrix(1,0,0,1,0,-377.54)">
+                <path id="Auxiliary" d="M4974.907,970.92L5140,806.944L5305.093,970.92L5140,1215.121L4974.907,970.92Z" style="fill:none;stroke:rgb(153,153,153);stroke-width:1px;"/>
+                <path id="Auxiliary1" affinity:id="Auxiliary" d="M5234.127,1142.719L5164.879,1211.951" style="fill:none;stroke:rgb(153,153,153);stroke-width:1px;"/>
+                <path id="Auxiliary2" affinity:id="Auxiliary" d="M5112.821,1210.614L5043.565,1141.391" style="fill:none;stroke:rgb(153,153,153);stroke-width:1px;"/>
+            </g>
+            <g id="_02-Secondary-guides" affinity:id="02 Secondary guides" transform="matrix(1,0,0,1,0,-377.54)">
+                <path id="Secondary" d="M4974.907,970.92L4974.907,867.851L5066.295,806.944L5140,806.944" style="fill:none;stroke:rgb(0,128,220);stroke-width:0.5px;stroke-dasharray:5,5,0,0,0,0;"/>
+                <path id="Secondary1" affinity:id="Secondary" d="M5140,806.944L5220.957,806.944L5305.093,872.447L5305.093,970.92" style="fill:none;stroke:rgb(0,128,220);stroke-width:0.5px;stroke-dasharray:5,5,0,0,0,0;"/>
+                <path id="Secondary2" affinity:id="Secondary" d="M5305.093,970.92L5305.093,1069.387L5185.648,1215.121L5140,1215.121" style="fill:none;stroke:rgb(0,128,220);stroke-width:0.5px;stroke-dasharray:5,5,0,0,0,0;"/>
+                <path id="Secondary3" affinity:id="Secondary" d="M5140,1215.121L5094.352,1215.121L4974.907,1073.984L4974.907,970.92" style="fill:none;stroke:rgb(0,128,220);stroke-width:0.5px;stroke-dasharray:5,5,0,0,0,0;"/>
+                <circle id="Secondary4" affinity:id="Secondary" cx="5140" cy="689.988" r="87.108" style="fill:none;stroke:rgb(0,128,220);stroke-width:0.5px;stroke-dasharray:5,5,0,0,0,0;"/>
+                <circle id="Secondary5" affinity:id="Secondary" cx="5140" cy="972.043" r="62.922" style="fill:none;stroke:rgb(0,128,220);stroke-width:0.5px;stroke-dasharray:5,5,0,0,0,0;"/>
+            </g>
+            <g id="_03-Primary-construction" affinity:id="03 Primary construction" transform="matrix(1,0,0,1,0,-377.54)">
+                <path id="Primary" d="M5140,539.519L5140,1278.481" style="fill:none;stroke:rgb(77,77,77);stroke-width:1px;"/>
+                <path id="Primary1" affinity:id="Primary" d="M4974.907,539.519L4974.907,1278.481" style="fill:none;stroke:rgb(77,77,77);stroke-width:1px;"/>
+                <path id="Primary2" affinity:id="Primary" d="M5305.093,539.519L5305.093,1278.481" style="fill:none;stroke:rgb(77,77,77);stroke-width:1px;"/>
+                <path id="Primary3" affinity:id="Primary" d="M4911.547,806.944L5368.453,806.944" style="fill:none;stroke:rgb(77,77,77);stroke-width:1px;"/>
+                <path id="Primary4" affinity:id="Primary" d="M4911.547,1215.121L5368.453,1215.121" style="fill:none;stroke:rgb(77,77,77);stroke-width:1px;"/>
+            </g>
+            <g id="_04-Logo--copy-" affinity:id="04 Logo (copy)" transform="matrix(1,0,0,1,0,-377.54)">
+                <path id="Logo-copy---body" affinity:id="Logo copy — body" d="M4974.907,970.92C4974.907,867.851 5066.295,806.944 5140,806.944C5220.957,806.944 5305.093,872.447 5305.093,970.92C5305.093,1069.387 5185.648,1215.121 5140,1215.121C5094.352,1215.121 4974.907,1073.984 4974.907,970.92ZM5140,909.161C5105.296,909.161 5077.124,937.339 5077.124,972.043C5077.124,1006.747 5105.296,1034.919 5140,1034.919C5174.704,1034.919 5202.882,1006.747 5202.882,972.043C5202.882,937.339 5174.704,909.161 5140,909.161Z" style="fill-opacity:0.1;stroke:rgb(31,31,31);stroke-width:2px;"/>
+                <path id="Logo-copy---dot" affinity:id="Logo copy — dot" d="M5140,602.879C5091.927,602.879 5052.892,641.909 5052.892,689.988C5052.892,738.06 5091.927,777.09 5140,777.09C5188.079,777.09 5227.108,738.06 5227.108,689.988C5227.108,641.909 5188.079,602.879 5140,602.879Z" style="fill-opacity:0.1;stroke:rgb(31,31,31);stroke-width:2px;"/>
+            </g>
+            <g id="_05-Anchors" affinity:id="05 Anchors" transform="matrix(1,0,0,1,0,-377.54)">
+                <circle id="Node" cx="4974.907" cy="970.92" r="6" style="fill:rgb(247,247,245);stroke:rgb(0,128,220);stroke-width:1.5px;"/>
+                <circle id="Node1" affinity:id="Node" cx="5305.093" cy="970.92" r="6" style="fill:rgb(247,247,245);stroke:rgb(0,128,220);stroke-width:1.5px;"/>
+                <circle id="Node2" affinity:id="Node" cx="5140" cy="806.944" r="6" style="fill:rgb(247,247,245);stroke:rgb(0,128,220);stroke-width:1.5px;"/>
+                <circle id="Node3" affinity:id="Node" cx="5140" cy="1215.121" r="6" style="fill:rgb(247,247,245);stroke:rgb(0,128,220);stroke-width:1.5px;"/>
+                <circle id="Node4" affinity:id="Node" cx="5140" cy="689.988" r="6" style="fill:rgb(247,247,245);stroke:rgb(0,128,220);stroke-width:1.5px;"/>
+                <circle id="Node5" affinity:id="Node" cx="5140" cy="972.043" r="6" style="fill:rgb(247,247,245);stroke:rgb(0,128,220);stroke-width:1.5px;"/>
+                <circle id="Node6" affinity:id="Node" cx="5199.503" cy="1177.335" r="6" style="fill:rgb(247,247,245);stroke:rgb(0,128,220);stroke-width:1.5px;"/>
+                <circle id="Node7" affinity:id="Node" cx="5078.193" cy="1176.002" r="6" style="fill:rgb(247,247,245);stroke:rgb(0,128,220);stroke-width:1.5px;"/>
+                <rect id="Corner" x="4968.907" y="800.944" width="12" height="12" style="fill:rgb(247,247,245);stroke:rgb(0,128,220);stroke-width:1.5px;"/>
+                <rect id="Corner1" affinity:id="Corner" x="5299.093" y="800.944" width="12" height="12" style="fill:rgb(247,247,245);stroke:rgb(0,128,220);stroke-width:1.5px;"/>
+                <rect id="Corner2" affinity:id="Corner" x="4968.907" y="1209.121" width="12" height="12" style="fill:rgb(247,247,245);stroke:rgb(0,128,220);stroke-width:1.5px;"/>
+                <rect id="Corner3" affinity:id="Corner" x="5299.093" y="1209.121" width="12" height="12" style="fill:rgb(247,247,245);stroke:rgb(0,128,220);stroke-width:1.5px;"/>
+            </g>
+        </g>
+    </g>
+</svg>

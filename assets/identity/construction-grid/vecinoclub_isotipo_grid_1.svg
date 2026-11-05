@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 2560 1440" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:affinity="https://www.affinity.studio/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1;">
+    <g id="Construction-Grid---Direction-01" affinity:id="Construction Grid — Direction 01" transform="matrix(1,0,0,1,-1000,188.54)">
+        <rect x="1000" y="-188.54" width="2560" height="1440" style="fill:rgb(247,247,245);"/>
+        <g id="_01-Auxiliary-lines" affinity:id="01 Auxiliary lines" transform="matrix(1,0,0,1,1000,-566.54)">
+            <path id="Auxiliary" d="M1146.812,878.988L1413.188,878.988" style="fill:none;stroke:rgb(153,153,153);stroke-width:1px;"/>
+            <path id="Auxiliary1" affinity:id="Auxiliary" d="M1425.249,1015.794L1134.751,1306.292" style="fill:none;stroke:rgb(153,153,153);stroke-width:1px;"/>
+            <path id="Auxiliary2" affinity:id="Auxiliary" d="M1134.751,1015.794L1425.249,1306.292" style="fill:none;stroke:rgb(153,153,153);stroke-width:1px;"/>
+            <path id="Auxiliary3" affinity:id="Auxiliary" d="M1280,1404.121L1128.533,1240.433" style="fill:none;stroke:rgb(153,153,153);stroke-width:1px;"/>
+            <path id="Auxiliary4" affinity:id="Auxiliary" d="M1280,1404.121L1431.467,1240.433" style="fill:none;stroke:rgb(153,153,153);stroke-width:1px;"/>
+        </g>
+        <g id="_02-Secondary-guides" affinity:id="02 Secondary guides" transform="matrix(1,0,0,1,1000,-566.54)">
+            <path id="Secondary" d="M1129.532,791.879L1430.468,791.879" style="fill:none;stroke:rgb(0,128,220);stroke-width:0.5px;stroke-dasharray:5,5,0,0,0,0;"/>
+            <path id="Secondary1" affinity:id="Secondary" d="M1129.532,966.096L1430.468,966.096" style="fill:none;stroke:rgb(0,128,220);stroke-width:0.5px;stroke-dasharray:5,5,0,0,0,0;"/>
+            <path id="Secondary2" affinity:id="Secondary" d="M1051.547,995.944L1508.453,995.944" style="fill:none;stroke:rgb(0,128,220);stroke-width:0.5px;stroke-dasharray:5,5,0,0,0,0;"/>
+            <path id="Secondary3" affinity:id="Secondary" d="M1051.547,1161.043L1508.453,1161.043" style="fill:none;stroke:rgb(0,128,220);stroke-width:0.5px;stroke-dasharray:5,5,0,0,0,0;"/>
+            <path id="Secondary4" affinity:id="Secondary" d="M1051.547,1404.121L1508.453,1404.121" style="fill:none;stroke:rgb(0,128,220);stroke-width:0.5px;stroke-dasharray:5,5,0,0,0,0;"/>
+            <path id="Secondary5" affinity:id="Secondary" d="M1114.907,728.519L1114.907,1467.481" style="fill:none;stroke:rgb(0,128,220);stroke-width:0.5px;stroke-dasharray:5,5,0,0,0,0;"/>
+            <path id="Secondary6" affinity:id="Secondary" d="M1445.093,728.519L1445.093,1467.481" style="fill:none;stroke:rgb(0,128,220);stroke-width:0.5px;stroke-dasharray:5,5,0,0,0,0;"/>
+        </g>
+        <g id="_03-Primary-construction" affinity:id="03 Primary construction" transform="matrix(1,0,0,1,1000,-566.54)">
+            <path id="Primary" d="M1280,728.519L1280,1467.481" style="fill:none;stroke:rgb(77,77,77);stroke-width:1px;"/>
+            <circle id="Primary1" affinity:id="Primary" cx="1280" cy="878.988" r="87.108" style="fill:none;stroke:rgb(77,77,77);stroke-width:1px;"/>
+            <circle id="Primary2" affinity:id="Primary" cx="1280" cy="1161.043" r="165.093" style="fill:none;stroke:rgb(77,77,77);stroke-width:1px;"/>
+            <circle id="Primary3" affinity:id="Primary" cx="1280" cy="1161.043" r="62.922" style="fill:none;stroke:rgb(77,77,77);stroke-width:1px;"/>
+        </g>
+        <g id="_04-Logo--copy-" affinity:id="04 Logo (copy)" transform="matrix(1,0,0,1,1000,-566.54)">
+            <path id="Logo-copy---body" affinity:id="Logo copy — body" d="M1114.907,1159.92C1114.907,1056.851 1206.295,995.944 1280,995.944C1360.957,995.944 1445.093,1061.447 1445.093,1159.92C1445.093,1258.387 1325.648,1404.121 1280,1404.121C1234.352,1404.121 1114.907,1262.984 1114.907,1159.92ZM1280,1098.161C1245.296,1098.161 1217.124,1126.339 1217.124,1161.043C1217.124,1195.747 1245.296,1223.919 1280,1223.919C1314.704,1223.919 1342.882,1195.747 1342.882,1161.043C1342.882,1126.339 1314.704,1098.161 1280,1098.161Z" style="fill-opacity:0.1;stroke:rgb(31,31,31);stroke-width:2px;"/>
+            <path id="Logo-copy---dot" affinity:id="Logo copy — dot" d="M1280,791.879C1231.927,791.879 1192.892,830.909 1192.892,878.988C1192.892,927.06 1231.927,966.09 1280,966.09C1328.079,966.09 1367.108,927.06 1367.108,878.988C1367.108,830.909 1328.079,791.879 1280,791.879Z" style="fill-opacity:0.1;stroke:rgb(31,31,31);stroke-width:2px;"/>
+        </g>
+        <g id="_05-Anchors" affinity:id="05 Anchors" transform="matrix(1,0,0,1,1000,-566.54)">
+            <g id="Node" transform="matrix(1,-0,-0,1,-0,378)">
+                <use xlink:href="#_Image1" x="1273.25" y="494.238" width="14px" height="14px"/>
+            </g>
+            <g id="Node1" affinity:id="Node" transform="matrix(1,-0,-0,1,-0,378)">
+                <use xlink:href="#_Image2" x="1273.25" y="776.293" width="14px" height="14px"/>
+            </g>
+            <g id="Node2" affinity:id="Node" transform="matrix(1,-0,-0,1,-0,378)">
+                <use xlink:href="#_Image3" x="1108.157" y="775.17" width="14px" height="14px"/>
+            </g>
+            <g id="Node3" affinity:id="Node" transform="matrix(1,-0,-0,1,-0,378)">
+                <use xlink:href="#_Image4" x="1438.343" y="775.17" width="14px" height="14px"/>
+            </g>
+            <g id="Node4" affinity:id="Node" transform="matrix(1,-0,-0,1,-0,378)">
+                <use xlink:href="#_Image5" x="1273.25" y="611.194" width="14px" height="14px"/>
+            </g>
+            <g id="Node5" affinity:id="Node" transform="matrix(1,-0,-0,1,-0,378)">
+                <use xlink:href="#_Image6" x="1273.25" y="1019.371" width="14px" height="14px"/>
+            </g>
+            <g id="Node6" affinity:id="Node" transform="matrix(1,0,0,1,-5,5)">
+                <g transform="matrix(1,-0,-0,1,5,373)">
+                    <use xlink:href="#_Image7" x="1147.076" y="893.421" width="14px" height="14px"/>
+                </g>
+            </g>
+            <g id="Node7" affinity:id="Node" transform="matrix(1,0,0,1,5,5)">
+                <g transform="matrix(1,-0,-0,1,-5,373)">
+                    <use xlink:href="#_Image8" x="1399.424" y="893.421" width="14px" height="14px"/>
+                </g>
+            </g>
+        </g>
+    </g>
+    <defs>
+        <image id="_Image1" width="14px" height="14px" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABxUlEQVQokY2SwUsUcRiGn9/MjjvOxG4I7SQLq4gsiMjsesqLJEIHO3joUFcpoX/BvBdUl8SDHrx287YhQSF0CGFX2Eu4xDRoB62llV1rpnWcmV8HWWspzef8PnzvB69wXYcOrifkcs3gwzfJ7pcmqV6NfP8VprMhc0PHCBCdrHBdBwly1dFZqoSIOKJgadhWgrofs31wwl4rYixr8uKGz6ApxZm44ujy6fs2UwNJVmbS5FLqWQsJrFV9FjaPMHqTvL3dxkwgFNcTcqkScnOgh9Ldvi4JTrs9KBis3+mj3mqzWDUBUJZrBiKOWJ25iiI4l8lcD/NFg9KOTyMQUqk1oGBpf136F7N5nVhKKocqivv1O7aV+K8EYGc0AF6XP6KkTY26H19K7OSGc/0ow9d0tg9OkJcQy/sBAJODJsp0NmSvFbFW9S+UfgSSZ1seVlpnJBWjzA0dM5Y1Wdg84t3n4Fzp4UYTtxnxZCJEFQjhug67npD33iSpt9rMFw1m8zp25vT38n7A8y2PT82I++M6j0Z//l4OgBciF6smpR2fWHZ/bKV1Hk+ETGXC7q3+SSMQsnKo8nL9FXaxyK3R64ykYlRB1zx+AQCruM/e04RqAAAAAElFTkSuQmCC"/>
+        <image id="_Image2" width="14px" height="14px" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB8UlEQVQokY3SwUuTcRzH8ffv55zTZFubuHnIiQcPJWxaIAnbU3QYDCqiQ/9AgSDm2VM3D3WziIKERYcgKC9lEIQ9m1AWUwspDNJWlI9zySbtWdt8nl+H4cHI8nP+vvjwga9IJpNoWpRgMMhywVbjGcFbo8bKVwN3q4vDh/wkuiWjvQKlbKHrKQDE6uonXuhp9aHjFBPzCmHViAQaCQcc5EybzFqNbNEi0tXGiHeODue20LQYolwucSW1qa6+rHAy1MSthIdOdwM7UcDkosnYzBYuabE0FMTT1CDkcsFWE/OKEyEnjy/4diEAAVyMtPDwvI/8L8lwWgIgxzMCYdW4nfAiBXsm1unkUl8LUwvrbJSVkku5+qY/m/6Wsz0ubFsxayjkx28FwgHHfxFAuL0RgOuvS0i/5wA5094X3Lk7d6QV2dPuIrNWQ+0DvvleBWAwoJCJbkm2aDG5aP4T/awqrr0qEfS5CfslcrRXEOlqY2xmi9SX6p5o6GmBlYLFzXgzDomQStlixDuHS1rE7//g8rMizz9XyJs27/Pb3H1ncjyZ59FyhdMHs/Q5cwJATE8/AaB/MKqG05KphXVse/fioM/NjXgzR505oetpNC1ah5oWQ8r6R2yUlZo1FHfuPeDYwABn+kOE/RKHRAAYhoGup/kN+1fJNYGlX7kAAAAASUVORK5CYII="/>
+        <image id="_Image3" width="14px" height="14px" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABxklEQVQokY2SMWgTcRyFv/8lsWcipiAmSqHaDgGrNa04pItSFISIdnQWKejk0iUu3VKxIoqLDgU3wcVFEQepZirUYAqCCEZowKSNJL0k3l17l7ufgyQ2Q7Tf/D54D56ybZMOXw1fsnlF4YdFsVRB36lxevwEF4baXB/dQYHqZJVtm4ggi2vCwvs6ynOZiIdIxoNULZ98xWW94TE+FOFRyuJ4RFRXvFcQmX+7wfSxAZ6kowwfDHRbCLBUsMgsNwnvH+Dd5W0iQZQqVFqSerZF6gi8vnYIrVuml1zJ4dLzGlfHIjw8ayotm1coz+VperCvBHBueB+zk2FefbGoOUq0z9U/m3bX68dMQscX4WM9gFbcaJGMB/8rASRjIQDWtkJogwd0qpa/J7GTq9QttERMJ19xkT2Iq2UHgCsjCi09qrHe8FgqWP+UfjnC4opJPKpz/ihot08pJkYOk1lukis5faWbbwy+Gx4LU20CCqVs2+Rbw5eLL2w2601mJ8PMJHSSsRBVy2e17HB/xaRoeNw4o3PnpP33OQAtV+TWB3j5aRPf710cj+pkp9pMx9q9X93NT1skV/bIzM2htg0eP7jLWFQIKHru8RsWGsbKv7j5MgAAAABJRU5ErkJggg=="/>
+        <image id="_Image4" width="14px" height="14px" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAByklEQVQokY2SsWsTYRiHn+8z1yQXk8oFexEl1RI6WS6dRMFSp0AEOzjo4KBgQXHQtfgfWBdLkHboJLiJS9FFKBWRaloMOpjhPK1Da08iSfDOmObuc5BUg1b7jC+/h/d94Sccx6aL4wlVquq8qFRxMUjGNUZyhygOSa4fFQiB6GaF49goUHN2jJmVDiIMyJsalhnB9UNWN7ZYawTkj+znXkGS65diW5y1Y+rW8xanBqPMFvvJpvZsX6GA+YrP1GKTxN4kby7qJDUhpOMJNbPSYXywj4VzRo8EIIDLeZ0HZw02vzS5uvRzLktVHREGzBX3IQU7MpbtY3JU5+GrTT5/U0pWa5A3tT82/Y2J4RhhqHj2SSHf11pYZuS/EoA1oAFQdgUyGhG4frgrsZs7kACZS2usbmyhdiGW19sAnDAVsng4ZK0RMF/x/yl9bSumlz0yRgorLZGXhr4zcjDB1GKTpx/bO0pXHtdx6gF3C3EiEiEcx+aDJ9T5J1HcRovJUZ2J4RjWgIbrh5TX29xe9nhXD7h2MsP0cX41B8DroG5WEiy89QlV78cZI0WpEOd0VvZ29XdqbaHu3H/E0svXHBsb58aFM1hpSUTSU48fEl6wdHrfoFAAAAAASUVORK5CYII="/>
+        <image id="_Image5" width="14px" height="14px" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB0UlEQVQokY2SwUtTcQDHP7/fXHtsbgukvUGlJCGYynMFoZdAqIRdPHSoYxFCt85aGF02yP6AOghBUafokkQQGNJBsNGkIAp9NAu3Fq7Neu/V2977dZAtPaz8nL8f+H7hKxzHosmHqq8yOcFKqY75uUSsU+PY4S7SvZKrgwIhEM2scBwLpVCzK4rsywrCqzOsBzH0Dsq2T65Yp1DzGD5ygPvjkqNxKVrirbxSN56XGOsJcScdpzsWaLVQwFzeZmphi0hnlLcXw0SDQoh88YcaufedkSTMn+9CtsrsZnHdZfzRJudOJHlwWgiZyQmEV+duen9bCeBU9z4mU2GevPnKN0cp+a68vWlnvXZM9Gn4vuJVSSE/rhUw9I7/SgBGIgjAzPUZZMgqUbb9PYnNnFv5ghwc6idXrKP2IC5vuABkb04jz/RICjWPubz9T+mnq5hdstDjGicPRZGXen8zdDDC1MIWi+tuW+nKsypm1SM72iAgEMI0V/lkCXXhRYhy7ReTqTATfRpGIkjZ9lnecLm9ZLFW9bh8XGN6wNl+jmmuAmA1UNfyEZ6+t/HV7sV6XCMz2mAs0fj71abYZNMV6nUlwMPH8xipFGcHkvTHfAI7Dg7wB5TCvjNi3ylPAAAAAElFTkSuQmCC"/>
+        <image id="_Image6" width="14px" height="14px" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB4UlEQVQokY3SPWhTURiA4fec3BuSKBkSzZ+QYJEsFZOKTWtBUVopRLSDBWfBguLgICLF2akKDqEoGhCzSEFcRMdiG0pKic0iKtVgHfqTik1Sc6/m5x6nKEGrfefv4ePjHJHJPEbXdRKJXoo1oVLvXLz5ovi0Vsbt1IkGdzO4r8mFrh+UNzdFNjtHf38CsbT0npnZrJq1DvCkFEFYLeJ+nZhfo2RY5FcbLFdadPvtjH5/wanebhEKBdFsNhtvg4M8mm9yMmLjXtJD2G2jnQLSBYPx6SqT2hCjPhQgZLEmVGoRTkTsPD/fiQAEcDHu4uk5DxsG3CzsAkC7k28iLLif9CAF23Y8bGesx0W6YHCm+VrJ3Nw8cb/+x6a/NRJ1YCnFrbsPkFt7DhHza/9FADGfDoAZHkB6AyFKhrUj2J67duM6MupzkF9toHYAF1bqAAz4FTLZJVmutEgXjH+ib3XFRK5GwOMm5pXIqwcF8f17GZ+uMvO5vi269LJMsdxictiJJhHCNGt8qFhqaMpk/WuVsR4XI1EHMZ9OybBYWKlzO1fjY7nFlWMBJo4iAIRp1gDYaih1+RU8W1zHsjovDnjcpIadnA7/fulfsN2GqVR2TfEwM8WRvj7OHo4Q80o0Scf3+An2wbh3cQJg0wAAAABJRU5ErkJggg=="/>
+        <image id="_Image7" width="14px" height="14px" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB9UlEQVQokY2ST2iScRjHP7/39d3sbZtbS90ojEZJi0jdaVsiBItQCwkijytoUKeIopDqFHUpurYOgw5BUIeCId2SRsVgSQb9uWzFxNS5llNTSef76zA2GGTtc34+X56H7yOKxWX8/iCpVIozl67JRO9xPv2QzC/9pkPX2Nut4u0qkH16i/7+fSIcPoUQAlGtlpmcjMrL489JD11B29KO267hspvIVQzimTrzhQb7rQp73tzkyJBHBIMBTABfdvpJ+gY4vKuV8YAFR4fKGhKYSFSIxIosuq9D7Kq0WDqESGRKcvBhnsEeiIa7UQR/ZSpZ4+jjJUZ6y+jRG0K5HReIRp0Hgc6mEoDP0cKYR+dlto2To2el8jFXx23XNqzXjJDTjCEl5d6DKHPZEi676b8SgMumAfAhr6F0tpnJVYxNiWtzttYGitNmJp6pIzchzqRrAOjf36EE+hTmCw0mEpV/Sr9qkjvTZba31LAaBZQLBwTu3VYisSJTyVpT6dyLZb7mVzi97TM+77AQ1WqZ2YIhR55UWfhZZMyjE3Kacdk0chWDmXSNu9Nl5vIrHOv6xr2AQ6iquvpyAKW6lOdfwbP3CxjGxou3FmYZ3ZHhYmhYqOpqbes9tGtCPBqBxUN2+TormckJenTJ2/sRErEo2QG3UE5418P+AMCgwoCpjjtrAAAAAElFTkSuQmCC"/>
+        <image id="_Image8" width="14px" height="14px" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB60lEQVQokY2Rz0vTcRjHX5/P9jW36aYz9qPDlKydim23WrhsF1EPEh06zqCBEt065Km7P+gSYYJ/gFF0KCroYEkHYY6EyCDWtxYx58w5Vy7b9v1+OgwJK63X8eF5PQ/v5xG6niGfzzM1dZNIfFAtefp580WR3fiB067R7TIo3rtBdeU5MzPTIhbrAUCk0ynGxydVLXKex+YphGkQ9mqEvFYKFZP0ao3slsGRrys8vdbL8TaLABCJRILi0bh6qM5wrvMQ0wMuAk4LuyhgdrnC2HwZR0srr4fttGpCSJuvSz3TztLb2cSji+49EoAALoft3L/gZq1YZvRFoy5zkSTCNLgz0IYU7Ess0EQyYufBqzXWvysl35UshL3aH5v+xlCwGdNUvMwr5IeNHUJe6z8lgJBHAyBVEEiXXaNQMf9L3O3zO8Da1VIlvSpQNA5xEKlcFYCoVyG7NpfIbhnMLlcOlL5VFROL2/jcTkIdEnk16ueYts7YfJmFT9V9pZEnJfSSwe0+G1aJELqeIaUX1MiCxqZsJxmxMxRsJuRpZE/lqkwubvO+ZHClx8fE6UYioesZ6vU6l5KjSj8cJX9yGPVbWp/bya0+G4OBX5+2AszN3eXzR110GzWu9weV7USctzvt+B2NQ4Q6JFa5d9pPLVa458mmBlEAAAAASUVORK5CYII="/>
+    </defs>
+</svg>
