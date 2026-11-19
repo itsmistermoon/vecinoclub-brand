@@ -15,11 +15,11 @@ const arm = profileCurve([[43,.1,true],[46,8,true],[54,12.5,true],[67,13.3,true]
 const css = readFileSync(new URL('../../tokens/vecinoclub.css', import.meta.url), 'utf8');
 const token = name => css.match(new RegExp(`--vc-${name}:\\s*(#[\\da-f]+)`, 'i'))[1];
 
-// Palette indices: 0 empty, 1 orange, 2 orange light, 3 orange shadow, 4 ivory, 5 ivory shadow, 6 ink.
+// Palette indices: 0 empty, 1 orange, 2 orange light, 3 orange shadow, 4 ivory, 5 ivory shadow, 6 ink, 7 arm orange.
 // Shadow orange is the only tone not taken from tokens: the primary darkened toward ink, flat.
-const colors = ['#00000000', token('primary'), token('primary-hover'), '#c4561a', '#f5f4f2', token('placeholder'), token('foreground')];
-// Slice materials: 1 orange, 3 orange in shadow, 4 ivory, 6 ink.
-const size = 48, unit = 1.8, count = Math.ceil(172 / unit);
+const colors = ['#00000000', token('primary'), token('primary-hover'), '#c4561a', '#f5f4f2', token('placeholder'), token('foreground'), token('primary')];
+// Slice materials: 1 orange, 3 orange in shadow, 4 ivory, 6 ink, 7 arm (orange, outlined against the body).
+const size = 72, unit = 1.8, count = Math.ceil(172 / unit);
 const slices = [];
 for (let iz = 0; iz < count; iz++) {
   const z = (iz + .5) * unit, layer = [];
@@ -31,12 +31,13 @@ for (let iz = 0; iz < count; iz++) {
     if (z >= 97 && inside(head.radius(z), .925)) c = 1;
     if (z >= 43 && z <= 93) for (const side of [-1, 1]) {
       const cx = side * 74.6 - side * .45 * z, r = arm.radius(z);
-      if (((x - cx) / r) ** 2 + (y / (r * 1.36)) ** 2 <= 1) c = 1;
+      if (((x - cx) / r) ** 2 + (y / (r * 1.36)) ** 2 <= 1) c = 7;
     }
     // Collar: the band of torso tucked under the head stays in shadow from every angle.
     if (c === 1 && z >= 87 && z < 99 && inside(body.radius(z), .82)) c = 3;
-    // Seal is the shallow ellipsoid used in scene-studio.
-    if ((x / 20.7) ** 2 + ((y - 34.3) / 4.3) ** 2 + ((z - 65) / 20) ** 2 <= 1) c = 4;
+    // Seal is a surface material: the frontmost torso voxels inside its circle turn ivory, with no volume of its own.
+    if (c === 1 && z <= 99 && inside(body.radius(z), .82) && (x / 20.7) ** 2 + ((z - 65) / 20) ** 2 <= 1
+      && y > Math.sqrt(Math.max(0, body.radius(z) ** 2 - x * x)) * .82 - unit * 3) c = 4;
     // Transfer face marks onto the frontmost voxels; one voxel of depth prevents holes.
     if (c && z >= 97) {
       const r = head.radius(z), front = Math.sqrt(Math.max(0, r * r - x * x)) * .925;
@@ -57,7 +58,7 @@ for (let iz = 0; iz < count; iz++) {
 // Pass 1 stacks slices into material and height buffers; pass 2 applies flat screen-space
 // shading; pass 3 traces a single 1 px ink outline around the finished silhouette.
 function render(slices, angle) {
-  const w = 72, h = 128, n = 48, base = 113, squash = .5, top = slices.length;
+  const w = 96, h = 128, n = 72, base = 113, squash = .5, top = slices.length;
   const mat = new Uint8Array(w * h), zb = new Int16Array(w * h).fill(-1), out = new Uint8Array(w * h);
   const a = angle * Math.PI / 180, co = Math.cos(a), si = Math.sin(a);
   for (let z = 0; z < top; z++) {
@@ -83,8 +84,10 @@ function render(slices, angle) {
     const shadow = up3 > z + 8 || edgeR || z < top * .2;
     // Light: top rim and left flank, only where nothing casts a shadow.
     const light = !shadow && (up < 0 || at(px, py - 2) < 0 || edgeL) && z > top * .3;
-    if (m === 4) out[i] = shadow ? 5 : 4;
+    if (m === 4) out[i] = edgeR ? 5 : 4;
     else out[i] = shadow ? 3 : light ? 2 : 1;
+    // Arms get their own ink line where they cross the body, so the lobe reads in profile.
+    if (m !== 7 && (mat[i - 1] === 7 || mat[i + 1] === 7 || mat[i - w] === 7 || mat[i + w] === 7)) out[i] = 6;
   }
   for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) {
     if (mat[py * w + px]) continue;
@@ -116,7 +119,7 @@ for (let z=0;z<count;z++) {
   for (let y=0;y<size;y++) sheet.set(slices[z].slice(y*size,(y+1)*size),(oy+y)*size*cols+ox);
 }
 png('punto-slices.png', size*cols, size*rowsN, sheet);
-const fw = 72, fh = 128, strip = new Uint8Array(fw*8*fh);
+const fw = 96, fh = 128, strip = new Uint8Array(fw*8*fh);
 for (let i=0;i<8;i++) { const frame=render(slices,i*45); for(let y=0;y<fh;y++) strip.set(frame.slice(y*fw,(y+1)*fw),y*fw*8+i*fw); }
 png('punto-8dir.png',fw*8,fh,strip);
 const html = `<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Punto · sprite stacking</title><style>body{margin:0;background:#f3e6cf;color:#171717;font:16px system-ui;display:grid;place-items:center;min-height:100vh}main{width:min(90vw,560px);text-align:center}canvas{width:min(72vw,288px);height:auto;image-rendering:pixelated;background:#fcf4df;border-radius:28px}label{display:block;margin:1rem}input{width:min(80%,360px);accent-color:#fb772a}button{border:0;border-radius:20px;padding:.7rem 1.2rem;background:#171717;color:#fff;font:inherit}p{color:#59554e}</style><main><h1>Punto en rotación</h1><p>Experimento de sprite stacking · ${count} cortes de ${size} px</p><canvas width="${fw}" height="${fh}" aria-label="Punto girando"></canvas><label for="angle">Ángulo: <output>0°</output></label><input id="angle" type="range" min="0" max="359" value="0"><p><button type="button">Pausar</button></p></main><script>const slices=${JSON.stringify(slices)}, colors=${JSON.stringify(colors)};const render=${render.toString()};const canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d'),slider=document.querySelector('input'),out=document.querySelector('output'),button=document.querySelector('button');let angle=0,playing=true,last=0;function draw(){const p=render(slices,angle),im=ctx.createImageData(canvas.width,canvas.height);for(let i=0;i<p.length;i++){if(!p[i])continue;const c=colors[p[i]];im.data[i*4]=parseInt(c.slice(1,3),16);im.data[i*4+1]=parseInt(c.slice(3,5),16);im.data[i*4+2]=parseInt(c.slice(5,7),16);im.data[i*4+3]=255}ctx.putImageData(im,0,0);slider.value=Math.round(angle)%360;out.value=slider.value+'°'}slider.oninput=()=>{angle=Number(slider.value);playing=false;button.textContent='Girar';draw()};button.onclick=()=>{playing=!playing;button.textContent=playing?'Pausar':'Girar'};function tick(t){if(playing&&last){angle=(angle+Math.min(t-last,50)*.025)%360;draw()}last=t;requestAnimationFrame(tick)}draw();requestAnimationFrame(tick);</script></html>`;
