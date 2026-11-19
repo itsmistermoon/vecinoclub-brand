@@ -6,7 +6,7 @@ La **referencia canónica** es `views/view-front.png`. `views/view-three-quarter
 
 ## Sprite stacking (sin aplicación definida por ahora)
 
-`sprite-stack/` contiene a Punto en pixel art para rotación pseudo-3D: `sprite-stack-slices.png` (192 cortes de 144 × 144 px, de abajo hacia arriba, 16 por fila) y `sprite-stack-8dir.png` (8 ángulos de 192 × 256 px, de 0° a 315°). Los genera `tools/sprite-stack/generate.mjs` desde los perfiles medidos de `tools/scene-studio`; no se editan a mano ni se adjuntan como referencia para generar imágenes.
+`sprite-stack/` contiene a Punto en pixel art para rotación pseudo-3D: `sprite-stack-slices.png` (192 cortes de 144 × 144 px, de abajo hacia arriba, 16 por fila) y `sprite-stack-8dir.png` (8 ángulos de 192 × 256 px, de 0° a 315° en pasos de 45°). El [generador de sprite stacking](../../tools/sprite-stack/README.md) usa los perfiles medidos de `tools/scene-studio`. Estos PNG son experimentales. Regenéralos con el script. Para generar imágenes, adjunta solo las referencias indicadas en «Referencias: adjuntar en este orden».
 
 ## Rasgos fijos
 

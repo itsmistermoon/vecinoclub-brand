@@ -17,7 +17,6 @@ const css = readFileSync(new URL('../../tokens/vecinoclub.css', import.meta.url)
 const token = name => css.match(new RegExp(`--vc-${name}:\\s*(#[\\da-f]+)`, 'i'))[1];
 
 // Palette indices: 0 empty, 1 orange, 2 orange light, 3 orange shadow, 4 ivory, 5 ivory shadow, 6 ink, 7 arm orange.
-// Shadow orange is the only tone not taken from tokens: the primary darkened toward ink, flat.
 const colors = ['#00000000', token('primary'), token('primary-hover'), '#d3581f', '#f7ebd3', token('placeholder'), token('foreground'), token('primary')];
 // Slice materials: 1 orange, 3 orange in shadow, 4 ivory, 6 ink, 7 arm (orange, outlined against the body).
 // --scale 1|2|4 multiplies grid resolution and layer count; without it, x2 writes the default outputs.
