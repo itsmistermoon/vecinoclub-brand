@@ -10,7 +10,7 @@ El render trabaja en tres pasadas sobre un buffer:
 - Sombrea con rellenos planos: naranja claro (`--vc-primary-hover`) en el borde superior y el flanco izquierdo; naranja sombra en el flanco derecho, la punta inferior y el cuello bajo la cabeza; el sello pasa a `--vc-placeholder` en su borde derecho. El sello es material de la superficie del torso, sin volumen propio.
 - Traza un contorno de tinta de 1 px una sola vez, alrededor de la silueta terminada. Los brazos usan un material propio; donde cruzan el cuerpo, el borde pasa a naranja sombra, como un pliegue.
 
-Los colores salen de `tokens/vecinoclub.css` y de la guía de mascota. El naranja sombra `#d3581f` es el único tono derivado: el primario oscurecido hacia un tono cálido, como la sombra del peluche.
+Los colores salen de `tokens/vecinoclub.css` y de la guía de mascota. El naranja sombra `#d3581f` y el crema del vientre `#f7ebd3` son los tonos que no salen de los tokens: la sombra es el primario oscurecido hacia un tono cálido; el crema imita el sello del peluche, como la sombra del peluche.
 
 Limitaciones: la cara solo se lee entre 315° y 45°. No es un recurso de producción aprobado.
 
