@@ -13,3 +13,7 @@ El render trabaja en tres pasadas sobre un buffer:
 Los colores salen de `tokens/vecinoclub.css` y de la guía de mascota. El naranja sombra `#c4561a` es el único tono derivado: el primario oscurecido hacia la tinta.
 
 Limitaciones: la cara solo se lee entre 315° y 45°. No es un recurso de producción aprobado.
+
+## Comparación de resolución
+
+`node tools/sprite-stack/generate.mjs --scale 1|2|4` escribe solo `compare/punto-8dir-x{N}.png`: multiplica la grilla y el número de capas, y escala las bandas de sombreado. El contorno sigue siendo de 1 px. Luego, `node tools/sprite-stack/compare.mjs` arma `compare/compare.png`: las tres tiras al mismo tamaño en pantalla y la cara a 0° y 45° de cada escala.
