@@ -1,0 +1,158 @@
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { writePng } from './png.mjs';
+import { profileCurve } from '../scene-studio/src/vendor/anatomy/lathe.mjs';
+
+// Use the same measured profiles as scene-studio, including its spline interpolation.
+const source = readFileSync(new URL('../scene-studio/src/characters.ts', import.meta.url), 'utf8');
+function rings(name) {
+  const block = source.match(new RegExp(`(?:export )?const ${name}: Ring\\[\\] = \\[([\\s\\S]*?)\\];`));
+  if (!block) throw new Error(`No se encontró el perfil ${name}`);
+  return [...block[1].matchAll(/\{\s*z:\s*([\d.]+),\s*r:\s*([\d.]+)/g)].map(m => [Number(m[1]), Number(m[2]), true]);
+}
+const head = profileCurve(rings('puntoHead'));
+const body = profileCurve(rings('torso'));
+const arm = profileCurve([[43,.1,true],[46,8,true],[54,12.5,true],[67,13.3,true],[82,11,true],[93,.1,true]]);
+const css = readFileSync(new URL('../../tokens/vecinoclub.css', import.meta.url), 'utf8');
+const token = name => css.match(new RegExp(`--vc-${name}:\\s*(#[\\da-f]+)`, 'i'))[1];
+
+// Palette indices: 0 empty, 1 orange, 2 orange light, 3 orange shadow, 4 ivory, 5 ivory shadow, 6 ink, 7 arm orange.
+const colors = ['#00000000', token('primary'), token('primary-hover'), '#d3581f', '#f7ebd3', token('placeholder'), token('foreground'), token('primary')];
+// Slice materials: 1 orange, 3 orange in shadow, 4 ivory, 6 ink, 7 arm (orange, outlined against the body).
+// --scale 1|2|4 multiplies grid resolution and layer count; without it, x2 writes the default outputs.
+const args = process.argv.slice(2);
+const comparison = args.length !== 0;
+if (comparison && (args.length !== 2 || args[0] !== '--scale' || !['1', '2', '4'].includes(args[1]))) {
+  throw new Error('Uso: node tools/sprite-stack/generate.mjs [--scale 1|2|4]');
+}
+const scale = comparison ? Number(args[1]) : 2;
+const started = performance.now();
+const size = 72 * scale, unit = 1.8 / scale, count = Math.ceil(172 / unit);
+const slices = [];
+for (let iz = 0; iz < count; iz++) {
+  const z = (iz + .5) * unit, layer = [];
+  for (let iy = 0; iy < size; iy++) for (let ix = 0; ix < size; ix++) {
+    const x = (ix - size / 2 + .5) * unit, y = (iy - size / 2 + .5) * unit;
+    const inside = (r, depth) => (x / r) ** 2 + (y / (r * depth)) ** 2 <= 1;
+    let c = 0;
+    if (z <= 99 && inside(body.radius(z), .82)) c = 1;
+    if (z >= 97 && inside(head.radius(z), .925)) c = 1;
+    if (z >= 43 && z <= 93) for (const side of [-1, 1]) {
+      const cx = side * 74.6 - side * .45 * z, r = arm.radius(z);
+      if (((x - cx) / r) ** 2 + (y / (r * 1.36)) ** 2 <= 1) c = 7;
+    }
+    // Collar: the band of torso tucked under the head stays in shadow from every angle.
+    if (c === 1 && z >= 87 && z < 99 && inside(body.radius(z), .82)) c = 3;
+    // Seal is a surface material: the frontmost torso voxels inside its circle turn ivory, with no volume of its own.
+    if (c === 1 && z <= 99 && inside(body.radius(z), .82) && (x / 20.7) ** 2 + ((z - 65) / 20) ** 2 <= 1
+      && y > Math.sqrt(Math.max(0, body.radius(z) ** 2 - x * x)) * .82 - 10) c = 4;
+    // Transfer face marks onto the frontmost voxels; one voxel of depth prevents holes.
+    if (c && z >= 97) {
+      const r = head.radius(z), front = Math.sqrt(Math.max(0, r * r - x * x)) * .925;
+      if (y > front - 5 && y <= front + unit) {
+        for (const ex of [-17.9, 19.3]) {
+          if (((x - ex) / 4.4) ** 2 + ((z - 129.7) / 6.94) ** 2 <= 1) c = 6;
+          if (((x - ex - .7) / 1.8) ** 2 + ((z - 132) / 2) ** 2 <= 1) c = 4;
+        }
+        if (Math.abs(x) <= 9 && Math.abs(z - (116 + 4.12 * ((x - .55) / 8.85) ** 2)) < 1.7) c = 6;
+      }
+    }
+    layer.push(c);
+  }
+  slices.push(layer);
+}
+
+// This exact renderer is embedded in the standalone HTML and used for the PNG strip.
+// Pass 1 stacks slices into material and height buffers; pass 2 applies flat screen-space
+// shading; pass 3 traces a single 1 px ink outline around the finished silhouette.
+function render(slices, angle, s = 1) {
+  const w = 96 * s, h = 128 * s, n = 72 * s, base = 113 * s, squash = .35, rise = Math.sqrt(1 - squash * squash), top = slices.length;
+  const mat = new Uint8Array(w * h), zb = new Int16Array(w * h).fill(-1), out = new Uint8Array(w * h);
+  const a = angle * Math.PI / 180, co = Math.cos(a), si = Math.sin(a);
+  for (let z = 0; z < top; z++) {
+    for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) {
+      const rx = px - w / 2, ry = (py - (base - z * rise)) / squash;
+      const x = Math.floor(rx * co + ry * si + n / 2);
+      const y = Math.floor(-rx * si + ry * co + n / 2);
+      if (x >= 0 && x < n && y >= 0 && y < n) {
+        const c = slices[z][y * n + x];
+        if (c) { mat[py * w + px] = c; zb[py * w + px] = z; }
+      }
+    }
+  }
+  const at = (px, py) => px < 0 || py < 0 || px >= w || py >= h ? -1 : zb[py * w + px];
+  for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) {
+    const i = py * w + px, m = mat[i], z = zb[i];
+    if (!m) continue;
+    if (m === 6 || m === 3) { out[i] = m; continue; }
+    // Distances in pixels scale with s so every resolution gets the same shading bands.
+    const free = (dx, dy, from, to) => { for (let k = from; k <= to; k++) if (at(px + dx * k, py + dy * k) < 0) return true; return false; };
+    let up3 = -1; for (let k = 2 * s; k <= 3 * s; k++) up3 = Math.max(up3, at(px, py - k));
+    const edgeR = free(1, 0, 1, 3 * s), edgeL = free(-1, 0, 1, 2 * s);
+    // Shadow: under an overhang (head over body, arms over torso), the right flank and the base.
+    const shadow = up3 > z + 8 * s || edgeR || z < top * .2;
+    // Light: top rim and left flank, only where nothing casts a shadow.
+    const light = !shadow && (free(0, -1, 1, 2 * s) || edgeL) && z > top * .3;
+    if (m === 4) out[i] = edgeR ? 5 : 4;
+    else out[i] = shadow ? 3 : light ? 2 : 1;
+    // Where an arm crosses the body, the body pixel turns shadow orange: a soft crease, not an ink line.
+    if (m !== 7 && (mat[i - 1] === 7 || mat[i + 1] === 7 || mat[i - w] === 7 || mat[i + w] === 7)) out[i] = 3;
+  }
+  for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) {
+    if (mat[py * w + px]) continue;
+    if (at(px - 1, py) >= 0 || at(px + 1, py) >= 0 || at(px, py - 1) >= 0 || at(px, py + 1) >= 0) out[py * w + px] = 6;
+  }
+  return out;
+}
+
+function writeIndexedPng(path, w, h, indexed) {
+  const palette = colors.map(c => c.length === 9 ? [0,0,0,0] : [...c.slice(1).matchAll(/../g)].map(m => parseInt(m[0],16)).concat(255));
+  const rgba = Buffer.alloc(w * h * 4);
+  for (let i = 0; i < indexed.length; i++) rgba.set(palette[indexed[i]], i * 4);
+  writePng(path, w, h, rgba);
+}
+const fw = 96 * scale, fh = 128 * scale, strip = new Uint8Array(fw*8*fh);
+for (let i=0;i<8;i++) { const frame=render(slices,i*45,scale); for(let y=0;y<fh;y++) strip.set(frame.slice(y*fw,(y+1)*fw),y*fw*8+i*fw); }
+if (comparison) {
+  mkdirSync(new URL('compare/', import.meta.url), { recursive: true });
+  writeIndexedPng(new URL(`compare/punto-8dir-x${scale}.png`, import.meta.url), fw*8, fh, strip);
+  console.log(`x${scale}: ${count} cortes de ${size} px en ${((performance.now() - started) / 1000).toFixed(1)} s`);
+  process.exit(0);
+}
+// Slice sheet: raw materials, bottom slice first, 16 per row.
+const cols = 16, rowsN = Math.ceil(count / cols), sheet = new Uint8Array(size * cols * size * rowsN);
+for (let z=0;z<count;z++) {
+  const ox = (z % cols) * size, oy = Math.floor(z / cols) * size;
+  for (let y=0;y<size;y++) sheet.set(slices[z].slice(y*size,(y+1)*size),(oy+y)*size*cols+ox);
+}
+// Brand outputs live with the other mascot assets; the arm is stored as the light orange so the
+// sheet keeps every material distinguishable (light orange never appears as a slice material).
+const assets = new URL('../../assets/mascot/', import.meta.url), outputs = [
+  ['sprite-stack/sprite-stack-slices.png', size * cols, size * rowsN, sheet.map(m => m === 7 ? 2 : m)],
+  ['sprite-stack/sprite-stack-8dir.png', fw * 8, fh, strip],
+];
+mkdirSync(new URL('sprite-stack/', assets), { recursive: true });
+const manifestUrl = new URL('manifest.json', assets), manifest = JSON.parse(readFileSync(manifestUrl, 'utf8'));
+manifest.files = manifest.files.filter(f => f.type !== 'sprite-stack');
+for (const [file, w, h, data] of outputs) {
+  const url = new URL(file, assets);
+  writeIndexedPng(url, w, h, data);
+  manifest.files.push({ file, type: 'sprite-stack', dimensions: { width: w, height: h }, sha256: createHash('sha256').update(readFileSync(url)).digest('hex') });
+}
+manifest.files.sort((a, b) => a.file < b.file ? -1 : 1);
+writeFileSync(manifestUrl, JSON.stringify(manifest, null, 2) + '\n');
+// The viewer loads the slice sheet over http and decodes it back into material indices.
+const html = `<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Punto · sprite stacking</title><style>body{margin:0;background:#f3e6cf;color:#171717;font:16px system-ui;display:grid;place-items:center;min-height:100vh}main{width:min(90vw,560px);text-align:center}canvas{width:min(72vw,288px);height:auto;image-rendering:pixelated;background:#fcf4df;border-radius:28px}label{display:block;margin:1rem}input{width:min(80%,360px);accent-color:#fb772a}button{border:0;border-radius:20px;padding:.7rem 1.2rem;background:#171717;color:#fff;font:inherit}p{color:#59554e}</style><main><h1>Punto en rotación</h1><p>Experimento de sprite stacking · ${count} cortes de ${size} px</p><canvas width="${fw}" height="${fh}" aria-label="Punto girando"></canvas><label for="angle">Ángulo: <output>0°</output></label><input id="angle" type="range" min="0" max="359" value="0" disabled><p><button type="button" disabled>Pausar</button></p></main><script>
+const count=${count},size=${size},cols=${cols},scale=${scale},colors=${JSON.stringify(colors)};
+const render=${render.toString()};
+const canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d'),slider=document.querySelector('input'),out=document.querySelector('output'),button=document.querySelector('button');
+let slices=[],angle=0,playing=true,last=0;
+function draw(){const p=render(slices,angle,scale),im=ctx.createImageData(canvas.width,canvas.height);for(let i=0;i<p.length;i++){if(!p[i])continue;const c=colors[p[i]];im.data[i*4]=parseInt(c.slice(1,3),16);im.data[i*4+1]=parseInt(c.slice(3,5),16);im.data[i*4+2]=parseInt(c.slice(5,7),16);im.data[i*4+3]=255}ctx.putImageData(im,0,0);slider.value=Math.round(angle)%360;out.value=slider.value+'°'}
+slider.oninput=()=>{angle=Number(slider.value);playing=false;button.textContent='Girar';draw()};button.onclick=()=>{playing=!playing;button.textContent=playing?'Pausar':'Girar'};
+function tick(t){if(playing&&last){angle=(angle+Math.min(t-last,50)*.025)%360;draw()}last=t;requestAnimationFrame(tick)}
+const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=img.width;c.height=img.height;const x=c.getContext('2d');x.drawImage(img,0,0);const d=x.getImageData(0,0,img.width,img.height).data,index=new Map([1,3,4,6].map(i=>[colors[i].slice(1,7),i]));index.set(colors[2].slice(1,7),7);
+for(let z=0;z<count;z++){const ox=z%cols*size,oy=Math.floor(z/cols)*size,layer=new Uint8Array(size*size);for(let y=0;y<size;y++)for(let x0=0;x0<size;x0++){const k=((oy+y)*img.width+ox+x0)*4;if(d[k+3])layer[y*size+x0]=index.get([d[k],d[k+1],d[k+2]].map(v=>v.toString(16).padStart(2,'0')).join(''))||0}slices.push(layer)}draw();slider.disabled=button.disabled=false;requestAnimationFrame(tick)};
+img.src='../../assets/mascot/sprite-stack/sprite-stack-slices.png';
+</script></html>`;
+writeFileSync(new URL('index.html', import.meta.url), html);
+console.log(`Generados ${count} cortes de ${size} px, tira de 8 ángulos e index.html`);

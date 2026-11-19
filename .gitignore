@@ -4,6 +4,7 @@ tools/*
 !tools/escena-isometrica.html
 !tools/escena-isometrica.md
 !tools/scene-studio/
+!tools/sprite-stack/
 !tools/scenes/
 tools/scene-studio/node_modules/
 tools/scene-studio/.build/

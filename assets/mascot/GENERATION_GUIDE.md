@@ -4,6 +4,10 @@
 
 La **referencia canónica** es `views/view-front.png`. `views/view-three-quarter.png` y `views/view-profile.png` forman su juego de vistas. `expressions/` y `poses/` son referencias secundarias. Las hojas originales vigentes, sin recomprimir, están en `_sheets/`. El master descartado se conservó fuera de esta colección, en `../mascot-archive/`; **no adjuntarlo para generar personajes nuevos**. Es dirección de arte raster, no modelo vectorial cerrado.
 
+## Sprite stacking (sin aplicación definida por ahora)
+
+`sprite-stack/` contiene a Punto en pixel art para rotación pseudo-3D: `sprite-stack-slices.png` (192 cortes de 144 × 144 px, de abajo hacia arriba, 16 por fila) y `sprite-stack-8dir.png` (8 ángulos de 192 × 256 px, de 0° a 315° en pasos de 45°). El [generador de sprite stacking](../../tools/sprite-stack/README.md) usa los perfiles medidos de `tools/scene-studio`. Estos PNG son experimentales. Regenéralos con el script. Para generar imágenes, adjunta solo las referencias indicadas en «Referencias: adjuntar en este orden».
+
 ## Rasgos fijos
 
 - **Silueta:** cabeza naranja grande, casi circular con base suavemente aplanada, separada visualmente del torso. Torso en forma de pin/gota: ancho arriba, afinado hacia **una sola punta inferior** redondeada. Brazos cortos, blandos, unidos a los costados. Nunca piernas.

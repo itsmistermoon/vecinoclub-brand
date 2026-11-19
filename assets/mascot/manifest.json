@@ -147,6 +147,24 @@
       "sha256": "7bd49fd636d826ef76c41799171751b877e3d0731f4e281f3f77ad7875f1066e"
     },
     {
+      "file": "sprite-stack/sprite-stack-8dir.png",
+      "type": "sprite-stack",
+      "dimensions": {
+        "width": 1536,
+        "height": 256
+      },
+      "sha256": "0618fb020b91b6d1365e8868d888128298c8d4697d20db8b14557083edf1f56d"
+    },
+    {
+      "file": "sprite-stack/sprite-stack-slices.png",
+      "type": "sprite-stack",
+      "dimensions": {
+        "width": 2304,
+        "height": 1728
+      },
+      "sha256": "eff56ff70332a8ee9b24523d13fb3d330a51c07c56dfeaeb290b0e5a1b66a88f"
+    },
+    {
       "file": "usage/usage-bakery-counter.png",
       "type": "usage",
       "dimensions": {
