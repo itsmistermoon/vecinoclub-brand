@@ -1,4 +1,4 @@
-// Builds compare/compare.png from compare/punto-8dir-x{1,2,4}.png (run `generate.mjs --scale N` first).
+// Builds compare/compare.png from compare/punto-8dir-x{1,2,4}.png. After changing shared inputs, regenerate all three scales before running this script.
 // Rows 1–3: each strip at the same on-screen size (x1 ×4, x2 ×2, x4 ×1, nearest neighbour).
 // Row 4: the face at 0° and 45° cropped from each scale and enlarged to the same size.
 import { readFileSync } from 'node:fs';

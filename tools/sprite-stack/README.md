@@ -24,4 +24,15 @@ Limitaciones: la cara solo se lee entre 315° y 45°. No es un recurso de produc
 
 ## Comparación de resolución
 
-`node tools/sprite-stack/generate.mjs --scale 1|2|4` escribe solo `compare/punto-8dir-x{N}.png` (x1: 72 px, x2: 144 px, x4: 288 px): multiplica la grilla y el número de capas, y escala las bandas de sombreado. El contorno sigue siendo de 1 px. Luego, `node tools/sprite-stack/compare.mjs` arma `compare/compare.png`: las tres tiras al mismo tamaño en pantalla y la cara a 0° y 45° de cada escala.
+Cada ejecución con `--scale` escribe solo la tira de la escala indicada. La escala multiplica la grilla, el número de capas y el ancho de las bandas de sombreado. El contorno sigue siendo de 1 px.
+
+Si cambias la paleta, los perfiles u otro insumo compartido, regenera las tres escalas antes de componer la hoja. Ejecuta desde la raíz del repositorio:
+
+```sh
+node tools/sprite-stack/generate.mjs --scale 1 &&
+node tools/sprite-stack/generate.mjs --scale 2 &&
+node tools/sprite-stack/generate.mjs --scale 4 &&
+node tools/sprite-stack/compare.mjs
+```
+
+La hoja `compare/compare.png` muestra las tres tiras al mismo tamaño en pantalla y la cara a 0° y 45° de cada escala.
