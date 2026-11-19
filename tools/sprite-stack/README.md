@@ -1,8 +1,8 @@
 # Punto · experimento de sprite stacking
 
-Desde la raíz del repositorio: `node tools/sprite-stack/generate.mjs`. No necesita instalar dependencias. Regenera la hoja, la tira y el HTML autónomo; abre `index.html` para girar o pausar a Punto. El control deslizante pausa la animación. La tira contiene ángulos de 0° a 315° en pasos de 45°, en cuadros de 96 × 128 píxeles.
+Desde la raíz del repositorio: `node tools/sprite-stack/generate.mjs`. No necesita instalar dependencias. Regenera la hoja, la tira y el HTML autónomo; abre `index.html` para girar o pausar a Punto. El control deslizante pausa la animación. La tira contiene ángulos de 0° a 315° en pasos de 45°, en cuadros de 192 × 256 píxeles (escala x2, la salida por defecto).
 
-La hoja contiene 96 cortes de 72 × 72 píxeles (los brazos llegan a ±63 unidades del eje), de abajo hacia arriba, 16 por fila. Cada capa equivale a 1,8 unidades del modelo y se eleva cos(20,5°) ≈ 0,94 px; el render reduce la profundidad a sin(20,5°) = 0,35. Así una esfera se dibuja como círculo. Los perfiles y su interpolación provienen de `scene-studio`.
+La hoja contiene 192 cortes de 144 × 144 píxeles (los brazos llegan a ±63 unidades del eje), de abajo hacia arriba, 16 por fila. Cada capa equivale a 0,9 unidades del modelo y se eleva cos(20,5°) ≈ 0,94 px; el render reduce la profundidad a sin(20,5°) = 0,35. Así una esfera se dibuja como círculo. Los perfiles y su interpolación provienen de `scene-studio`.
 
 El render trabaja en tres pasadas sobre un buffer:
 
@@ -16,4 +16,4 @@ Limitaciones: la cara solo se lee entre 315° y 45°. No es un recurso de produc
 
 ## Comparación de resolución
 
-`node tools/sprite-stack/generate.mjs --scale 1|2|4` escribe solo `compare/punto-8dir-x{N}.png`: multiplica la grilla y el número de capas, y escala las bandas de sombreado. El contorno sigue siendo de 1 px. Luego, `node tools/sprite-stack/compare.mjs` arma `compare/compare.png`: las tres tiras al mismo tamaño en pantalla y la cara a 0° y 45° de cada escala.
+`node tools/sprite-stack/generate.mjs --scale 1|2|4` escribe solo `compare/punto-8dir-x{N}.png` (x1: 72 px, x2: 144 px, x4: 288 px): multiplica la grilla y el número de capas, y escala las bandas de sombreado. El contorno sigue siendo de 1 px. Luego, `node tools/sprite-stack/compare.mjs` arma `compare/compare.png`: las tres tiras al mismo tamaño en pantalla y la cara a 0° y 45° de cada escala.
