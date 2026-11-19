@@ -1,4 +1,5 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { deflateSync } from 'node:zlib';
 import { profileCurve } from '../scene-studio/src/vendor/anatomy/lathe.mjs';
 
@@ -115,7 +116,7 @@ function png(path, w, h, indexed) {
     return Buffer.concat([len,b,end]);
   }
   const hdr=Buffer.alloc(13); hdr.writeUInt32BE(w); hdr.writeUInt32BE(h,4); hdr[8]=8; hdr[9]=6;
-  writeFileSync(new URL(path, import.meta.url), Buffer.concat([Buffer.from('89504e470d0a1a0a','hex'),chunk('IHDR',hdr),chunk('IDAT',deflateSync(raw)),chunk('IEND',Buffer.alloc(0))]));
+  writeFileSync(path instanceof URL ? path : new URL(path, import.meta.url), Buffer.concat([Buffer.from('89504e470d0a1a0a','hex'),chunk('IHDR',hdr),chunk('IDAT',deflateSync(raw)),chunk('IEND',Buffer.alloc(0))]));
 }
 const fw = 96 * scale, fh = 128 * scale, strip = new Uint8Array(fw*8*fh);
 for (let i=0;i<8;i++) { const frame=render(slices,i*45,scale); for(let y=0;y<fh;y++) strip.set(frame.slice(y*fw,(y+1)*fw),y*fw*8+i*fw); }
@@ -131,8 +132,34 @@ for (let z=0;z<count;z++) {
   const ox = (z % cols) * size, oy = Math.floor(z / cols) * size;
   for (let y=0;y<size;y++) sheet.set(slices[z].slice(y*size,(y+1)*size),(oy+y)*size*cols+ox);
 }
-png('punto-slices.png', size*cols, size*rowsN, sheet);
-png('punto-8dir.png',fw*8,fh,strip);
-const html = `<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Punto · sprite stacking</title><style>body{margin:0;background:#f3e6cf;color:#171717;font:16px system-ui;display:grid;place-items:center;min-height:100vh}main{width:min(90vw,560px);text-align:center}canvas{width:min(72vw,288px);height:auto;image-rendering:pixelated;background:#fcf4df;border-radius:28px}label{display:block;margin:1rem}input{width:min(80%,360px);accent-color:#fb772a}button{border:0;border-radius:20px;padding:.7rem 1.2rem;background:#171717;color:#fff;font:inherit}p{color:#59554e}</style><main><h1>Punto en rotación</h1><p>Experimento de sprite stacking · ${count} cortes de ${size} px</p><canvas width="${fw}" height="${fh}" aria-label="Punto girando"></canvas><label for="angle">Ángulo: <output>0°</output></label><input id="angle" type="range" min="0" max="359" value="0"><p><button type="button">Pausar</button></p></main><script>const slices=${JSON.stringify(slices)}, colors=${JSON.stringify(colors)};const render=${render.toString()};const canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d'),slider=document.querySelector('input'),out=document.querySelector('output'),button=document.querySelector('button');let angle=0,playing=true,last=0;function draw(){const p=render(slices,angle,${scale}),im=ctx.createImageData(canvas.width,canvas.height);for(let i=0;i<p.length;i++){if(!p[i])continue;const c=colors[p[i]];im.data[i*4]=parseInt(c.slice(1,3),16);im.data[i*4+1]=parseInt(c.slice(3,5),16);im.data[i*4+2]=parseInt(c.slice(5,7),16);im.data[i*4+3]=255}ctx.putImageData(im,0,0);slider.value=Math.round(angle)%360;out.value=slider.value+'°'}slider.oninput=()=>{angle=Number(slider.value);playing=false;button.textContent='Girar';draw()};button.onclick=()=>{playing=!playing;button.textContent=playing?'Pausar':'Girar'};function tick(t){if(playing&&last){angle=(angle+Math.min(t-last,50)*.025)%360;draw()}last=t;requestAnimationFrame(tick)}draw();requestAnimationFrame(tick);</script></html>`;
-writeFileSync(new URL('index.html', import.meta.url),html);
+// Brand outputs live with the other mascot assets; the arm is stored as the light orange so the
+// sheet keeps every material distinguishable (light orange never appears as a slice material).
+const assets = new URL('../../assets/mascot/', import.meta.url), outputs = [
+  ['sprite-stack/sprite-stack-slices.png', size * cols, size * rowsN, sheet.map(m => m === 7 ? 2 : m)],
+  ['sprite-stack/sprite-stack-8dir.png', fw * 8, fh, strip],
+];
+mkdirSync(new URL('sprite-stack/', assets), { recursive: true });
+const manifestUrl = new URL('manifest.json', assets), manifest = JSON.parse(readFileSync(manifestUrl, 'utf8'));
+manifest.files = manifest.files.filter(f => f.type !== 'sprite-stack');
+for (const [file, w, h, data] of outputs) {
+  const url = new URL(file, assets);
+  png(url, w, h, data);
+  manifest.files.push({ file, type: 'sprite-stack', dimensions: { width: w, height: h }, sha256: createHash('sha256').update(readFileSync(url)).digest('hex') });
+}
+manifest.files.sort((a, b) => a.file < b.file ? -1 : 1);
+writeFileSync(manifestUrl, JSON.stringify(manifest, null, 2) + '\n');
+// The viewer loads the slice sheet over http and decodes it back into material indices.
+const html = `<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Punto · sprite stacking</title><style>body{margin:0;background:#f3e6cf;color:#171717;font:16px system-ui;display:grid;place-items:center;min-height:100vh}main{width:min(90vw,560px);text-align:center}canvas{width:min(72vw,288px);height:auto;image-rendering:pixelated;background:#fcf4df;border-radius:28px}label{display:block;margin:1rem}input{width:min(80%,360px);accent-color:#fb772a}button{border:0;border-radius:20px;padding:.7rem 1.2rem;background:#171717;color:#fff;font:inherit}p{color:#59554e}</style><main><h1>Punto en rotación</h1><p>Experimento de sprite stacking · ${count} cortes de ${size} px</p><canvas width="${fw}" height="${fh}" aria-label="Punto girando"></canvas><label for="angle">Ángulo: <output>0°</output></label><input id="angle" type="range" min="0" max="359" value="0"><p><button type="button">Pausar</button></p></main><script>
+const count=${count},size=${size},cols=${cols},scale=${scale},colors=${JSON.stringify(colors)};
+const render=${render.toString()};
+const canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d'),slider=document.querySelector('input'),out=document.querySelector('output'),button=document.querySelector('button');
+let slices=[],angle=0,playing=true,last=0;
+function draw(){const p=render(slices,angle,scale),im=ctx.createImageData(canvas.width,canvas.height);for(let i=0;i<p.length;i++){if(!p[i])continue;const c=colors[p[i]];im.data[i*4]=parseInt(c.slice(1,3),16);im.data[i*4+1]=parseInt(c.slice(3,5),16);im.data[i*4+2]=parseInt(c.slice(5,7),16);im.data[i*4+3]=255}ctx.putImageData(im,0,0);slider.value=Math.round(angle)%360;out.value=slider.value+'°'}
+slider.oninput=()=>{angle=Number(slider.value);playing=false;button.textContent='Girar';draw()};button.onclick=()=>{playing=!playing;button.textContent=playing?'Pausar':'Girar'};
+function tick(t){if(playing&&last){angle=(angle+Math.min(t-last,50)*.025)%360;draw()}last=t;requestAnimationFrame(tick)}
+const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=img.width;c.height=img.height;const x=c.getContext('2d');x.drawImage(img,0,0);const d=x.getImageData(0,0,img.width,img.height).data,index=new Map([1,3,4,6].map(i=>[colors[i].slice(1,7),i]));index.set(colors[2].slice(1,7),7);
+for(let z=0;z<count;z++){const ox=z%cols*size,oy=Math.floor(z/cols)*size,layer=new Uint8Array(size*size);for(let y=0;y<size;y++)for(let x0=0;x0<size;x0++){const k=((oy+y)*img.width+ox+x0)*4;if(d[k+3])layer[y*size+x0]=index.get([d[k],d[k+1],d[k+2]].map(v=>v.toString(16).padStart(2,'0')).join(''))||0}slices.push(layer)}draw();requestAnimationFrame(tick)};
+img.src='../../assets/mascot/sprite-stack/sprite-stack-slices.png';
+</script></html>`;
+writeFileSync(new URL('index.html', import.meta.url), html);
 console.log(`Generados ${count} cortes de ${size} px, tira de 8 ángulos e index.html`);

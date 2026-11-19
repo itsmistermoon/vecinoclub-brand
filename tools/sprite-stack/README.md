@@ -1,8 +1,16 @@
 # Punto · experimento de sprite stacking
 
-Desde la raíz del repositorio: `node tools/sprite-stack/generate.mjs`. No necesita instalar dependencias. Regenera la hoja, la tira y el HTML autónomo; abre `index.html` para girar o pausar a Punto. El control deslizante pausa la animación. La tira contiene ángulos de 0° a 315° en pasos de 45°, en cuadros de 192 × 256 píxeles (escala x2, la salida por defecto).
+Desde la raíz del repositorio: `node tools/sprite-stack/generate.mjs`. No necesita instalar dependencias. Escribe la hoja de cortes y la tira de 8 ángulos en `assets/mascot/sprite-stack/`, registra ambas en `assets/mascot/manifest.json` y regenera el visor `index.html`. La tira contiene ángulos de 0° a 315° en pasos de 45°, en cuadros de 192 × 256 píxeles (escala x2, la salida por defecto).
 
-La hoja contiene 192 cortes de 144 × 144 píxeles (los brazos llegan a ±63 unidades del eje), de abajo hacia arriba, 16 por fila. Cada capa equivale a 0,9 unidades del modelo y se eleva cos(20,5°) ≈ 0,94 px; el render reduce la profundidad a sin(20,5°) = 0,35. Así una esfera se dibuja como círculo. Los perfiles y su interpolación provienen de `scene-studio`.
+El visor pesa pocos KB: carga `assets/mascot/sprite-stack/sprite-stack-slices.png` y lee sus píxeles en un canvas. Los navegadores bloquean esa lectura desde `file://`, así que hay que servir la raíz del repositorio por http:
+
+```sh
+npx serve .
+```
+
+Luego abre `http://localhost:3000/tools/sprite-stack/`. El control deslizante pausa la animación.
+
+La hoja contiene 192 cortes de 144 × 144 píxeles (los brazos llegan a ±63 unidades del eje), de abajo hacia arriba, 16 por fila. Cada material es un color: naranja, naranja sombra (cuello), crema (sello), tinta (cara) y naranja claro para los brazos, que así se distinguen del torso. Cada capa equivale a 0,9 unidades del modelo y se eleva cos(20,5°) ≈ 0,94 px; el render reduce la profundidad a sin(20,5°) = 0,35. Así una esfera se dibuja como círculo. Los perfiles y su interpolación provienen de `scene-studio`.
 
 El render trabaja en tres pasadas sobre un buffer:
 
