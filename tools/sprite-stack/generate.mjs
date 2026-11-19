@@ -21,10 +21,12 @@ const token = name => css.match(new RegExp(`--vc-${name}:\\s*(#[\\da-f]+)`, 'i')
 const colors = ['#00000000', token('primary'), token('primary-hover'), '#d3581f', '#f7ebd3', token('placeholder'), token('foreground'), token('primary')];
 // Slice materials: 1 orange, 3 orange in shadow, 4 ivory, 6 ink, 7 arm (orange, outlined against the body).
 // --scale 1|2|4 multiplies grid resolution and layer count; without it, x2 writes the default outputs.
-const scaleArg = process.argv.indexOf('--scale');
-const scaleValue = scaleArg < 0 ? '2' : process.argv[scaleArg + 1];
-if (!['1', '2', '4'].includes(scaleValue)) throw new Error('--scale debe ser 1, 2 o 4');
-const scale = Number(scaleValue);
+const args = process.argv.slice(2);
+const comparison = args.length !== 0;
+if (comparison && (args.length !== 2 || args[0] !== '--scale' || !['1', '2', '4'].includes(args[1]))) {
+  throw new Error('Uso: node tools/sprite-stack/generate.mjs [--scale 1|2|4]');
+}
+const scale = comparison ? Number(args[1]) : 2;
 const started = performance.now();
 const size = 72 * scale, unit = 1.8 / scale, count = Math.ceil(172 / unit);
 const slices = [];
@@ -112,7 +114,7 @@ function writeIndexedPng(path, w, h, indexed) {
 }
 const fw = 96 * scale, fh = 128 * scale, strip = new Uint8Array(fw*8*fh);
 for (let i=0;i<8;i++) { const frame=render(slices,i*45,scale); for(let y=0;y<fh;y++) strip.set(frame.slice(y*fw,(y+1)*fw),y*fw*8+i*fw); }
-if (scaleArg >= 0) {
+if (comparison) {
   mkdirSync(new URL('compare/', import.meta.url), { recursive: true });
   writeIndexedPng(new URL(`compare/punto-8dir-x${scale}.png`, import.meta.url), fw*8, fh, strip);
   console.log(`x${scale}: ${count} cortes de ${size} px en ${((performance.now() - started) / 1000).toFixed(1)} s`);
