@@ -37,11 +37,11 @@ for (let iz = 0; iz < count; iz++) {
     if (c === 1 && z >= 87 && z < 99 && inside(body.radius(z), .82)) c = 3;
     // Seal is a surface material: the frontmost torso voxels inside its circle turn ivory, with no volume of its own.
     if (c === 1 && z <= 99 && inside(body.radius(z), .82) && (x / 20.7) ** 2 + ((z - 65) / 20) ** 2 <= 1
-      && y > Math.sqrt(Math.max(0, body.radius(z) ** 2 - x * x)) * .82 - unit * 3) c = 4;
+      && y > Math.sqrt(Math.max(0, body.radius(z) ** 2 - x * x)) * .82 - 10) c = 4;
     // Transfer face marks onto the frontmost voxels; one voxel of depth prevents holes.
     if (c && z >= 97) {
       const r = head.radius(z), front = Math.sqrt(Math.max(0, r * r - x * x)) * .925;
-      if (y > front - unit * 1.5 && y <= front + unit) {
+      if (y > front - 5 && y <= front + unit) {
         for (const ex of [-17.9, 19.3]) {
           if (((x - ex) / 4.4) ** 2 + ((z - 129.7) / 6.94) ** 2 <= 1) c = 6;
           if (((x - ex - .7) / 1.8) ** 2 + ((z - 132) / 2) ** 2 <= 1) c = 4;
@@ -58,12 +58,12 @@ for (let iz = 0; iz < count; iz++) {
 // Pass 1 stacks slices into material and height buffers; pass 2 applies flat screen-space
 // shading; pass 3 traces a single 1 px ink outline around the finished silhouette.
 function render(slices, angle) {
-  const w = 96, h = 128, n = 72, base = 113, squash = .5, top = slices.length;
+  const w = 96, h = 128, n = 72, base = 113, squash = .35, rise = Math.sqrt(1 - squash * squash), top = slices.length;
   const mat = new Uint8Array(w * h), zb = new Int16Array(w * h).fill(-1), out = new Uint8Array(w * h);
   const a = angle * Math.PI / 180, co = Math.cos(a), si = Math.sin(a);
   for (let z = 0; z < top; z++) {
     for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) {
-      const rx = px - w / 2, ry = (py - (base - z)) / squash;
+      const rx = px - w / 2, ry = (py - (base - z * rise)) / squash;
       const x = Math.floor(rx * co + ry * si + n / 2);
       const y = Math.floor(-rx * si + ry * co + n / 2);
       if (x >= 0 && x < n && y >= 0 && y < n) {
@@ -86,8 +86,8 @@ function render(slices, angle) {
     const light = !shadow && (up < 0 || at(px, py - 2) < 0 || edgeL) && z > top * .3;
     if (m === 4) out[i] = edgeR ? 5 : 4;
     else out[i] = shadow ? 3 : light ? 2 : 1;
-    // Arms get their own ink line where they cross the body, so the lobe reads in profile.
-    if (m !== 7 && (mat[i - 1] === 7 || mat[i + 1] === 7 || mat[i - w] === 7 || mat[i + w] === 7)) out[i] = 6;
+    // Where an arm crosses the body, the body pixel turns shadow orange: a soft crease, not an ink line.
+    if (m !== 7 && (mat[i - 1] === 7 || mat[i + 1] === 7 || mat[i - w] === 7 || mat[i + w] === 7)) out[i] = 3;
   }
   for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) {
     if (mat[py * w + px]) continue;
