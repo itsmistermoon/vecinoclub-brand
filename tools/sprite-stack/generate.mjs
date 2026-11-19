@@ -1,6 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { deflateSync } from 'node:zlib';
+import { writePng } from './png.mjs';
 import { profileCurve } from '../scene-studio/src/vendor/anatomy/lathe.mjs';
 
 // Use the same measured profiles as scene-studio, including its spline interpolation.
@@ -102,27 +102,17 @@ function render(slices, angle, s = 1) {
   return out;
 }
 
-function png(path, w, h, indexed) {
+function writeIndexedPng(path, w, h, indexed) {
   const palette = colors.map(c => c.length === 9 ? [0,0,0,0] : [...c.slice(1).matchAll(/../g)].map(m => parseInt(m[0],16)).concat(255));
-  const raw = Buffer.alloc((w * 4 + 1) * h);
-  for (let y=0; y<h; y++) for (let x=0; x<w; x++) {
-    const rgba = palette[indexed[y*w+x]];
-    for (let i=0;i<4;i++) raw[y*(w*4+1)+1+x*4+i] = rgba[i];
-  }
-  function chunk(type, data) {
-    const t = Buffer.from(type), b = Buffer.concat([t,data]); let crc = 0xffffffff;
-    for (const byte of b) { crc ^= byte; for (let i=0;i<8;i++) crc = (crc >>> 1) ^ (0xedb88320 & -(crc & 1)); }
-    const len = Buffer.alloc(4), end = Buffer.alloc(4); len.writeUInt32BE(data.length); end.writeUInt32BE((crc ^ 0xffffffff) >>> 0);
-    return Buffer.concat([len,b,end]);
-  }
-  const hdr=Buffer.alloc(13); hdr.writeUInt32BE(w); hdr.writeUInt32BE(h,4); hdr[8]=8; hdr[9]=6;
-  writeFileSync(path instanceof URL ? path : new URL(path, import.meta.url), Buffer.concat([Buffer.from('89504e470d0a1a0a','hex'),chunk('IHDR',hdr),chunk('IDAT',deflateSync(raw)),chunk('IEND',Buffer.alloc(0))]));
+  const rgba = Buffer.alloc(w * h * 4);
+  for (let i = 0; i < indexed.length; i++) rgba.set(palette[indexed[i]], i * 4);
+  writePng(path, w, h, rgba);
 }
 const fw = 96 * scale, fh = 128 * scale, strip = new Uint8Array(fw*8*fh);
 for (let i=0;i<8;i++) { const frame=render(slices,i*45,scale); for(let y=0;y<fh;y++) strip.set(frame.slice(y*fw,(y+1)*fw),y*fw*8+i*fw); }
 if (scaleArg >= 0) {
   mkdirSync(new URL('compare/', import.meta.url), { recursive: true });
-  png(`compare/punto-8dir-x${scale}.png`, fw*8, fh, strip);
+  writeIndexedPng(new URL(`compare/punto-8dir-x${scale}.png`, import.meta.url), fw*8, fh, strip);
   console.log(`x${scale}: ${count} cortes de ${size} px en ${((performance.now() - started) / 1000).toFixed(1)} s`);
   process.exit(0);
 }
@@ -143,7 +133,7 @@ const manifestUrl = new URL('manifest.json', assets), manifest = JSON.parse(read
 manifest.files = manifest.files.filter(f => f.type !== 'sprite-stack');
 for (const [file, w, h, data] of outputs) {
   const url = new URL(file, assets);
-  png(url, w, h, data);
+  writeIndexedPng(url, w, h, data);
   manifest.files.push({ file, type: 'sprite-stack', dimensions: { width: w, height: h }, sha256: createHash('sha256').update(readFileSync(url)).digest('hex') });
 }
 manifest.files.sort((a, b) => a.file < b.file ? -1 : 1);

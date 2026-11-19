@@ -1,8 +1,9 @@
 // Builds compare/compare.png from compare/punto-8dir-x{1,2,4}.png (run `generate.mjs --scale N` first).
 // Rows 1–3: each strip at the same on-screen size (x1 ×4, x2 ×2, x4 ×1, nearest neighbour).
 // Row 4: the face at 0° and 45° cropped from each scale and enlarged to the same size.
-import { readFileSync, writeFileSync } from 'node:fs';
-import { deflateSync, inflateSync } from 'node:zlib';
+import { readFileSync } from 'node:fs';
+import { inflateSync } from 'node:zlib';
+import { writePng } from './png.mjs';
 
 const file = name => new URL(`compare/${name}`, import.meta.url);
 function read(name) {
@@ -19,19 +20,6 @@ function read(name) {
   for (let y = 0; y < h; y++) raw.copy(px, y * w * 4, y * (w * 4 + 1) + 1, (y + 1) * (w * 4 + 1));
   return { w, h, px };
 }
-function write(name, w, h, px) {
-  const raw = Buffer.alloc((w * 4 + 1) * h);
-  for (let y = 0; y < h; y++) px.copy(raw, y * (w * 4 + 1) + 1, y * w * 4, (y + 1) * w * 4);
-  const chunk = (type, data) => {
-    const b = Buffer.concat([Buffer.from(type), data]); let crc = 0xffffffff;
-    for (const byte of b) { crc ^= byte; for (let i = 0; i < 8; i++) crc = (crc >>> 1) ^ (0xedb88320 & -(crc & 1)); }
-    const len = Buffer.alloc(4), end = Buffer.alloc(4); len.writeUInt32BE(data.length); end.writeUInt32BE((crc ^ 0xffffffff) >>> 0);
-    return Buffer.concat([len, b, end]);
-  };
-  const hdr = Buffer.alloc(13); hdr.writeUInt32BE(w); hdr.writeUInt32BE(h, 4); hdr[8] = 8; hdr[9] = 6;
-  writeFileSync(file(name), Buffer.concat([Buffer.from('89504e470d0a1a0a', 'hex'), chunk('IHDR', hdr), chunk('IDAT', deflateSync(raw)), chunk('IEND', Buffer.alloc(0))]));
-}
-
 const scales = [1, 2, 4], strips = scales.map(s => read(`punto-8dir-x${s}.png`));
 const stripW = 96 * 8 * 4, stripH = 128 * 4, gap = 16;
 // Face crop in x1 frame pixels: the head, from the top of the skull to the collar.
@@ -51,5 +39,5 @@ strips.forEach((img, r) => {
   const s = scales[r], k = zoom / s;
   [0, 1].forEach((frame, j) => blit(img, (frame * 96 + crop.x) * s, crop.y * s, crop.w * s, crop.h * s, k, (r * 2 + j) * (cropW + gap), 3 * (stripH + gap)));
 });
-write('compare.png', W, H, out);
+writePng(file('compare.png'), W, H, out);
 console.log(`compare.png ${W} × ${H}`);
